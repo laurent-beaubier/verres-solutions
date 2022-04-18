@@ -1,5 +1,7 @@
 **Evènement** : PrestationCree
+
 **Objets Salesforce Créés** : Case, Comment, Account
+
 **Ressources Sinapps** : Prestation, Mission, DossierSinistre, SuiviInforation
 
 # Mapping des données
@@ -102,8 +104,8 @@ On détermine si un compte correspond à un particulier ou à un professionnel e
 
 ### Contenu du commentaire
 
-| Préfixe | Sinapps Ressource | Sinapps path | Sinapps name | Comments|
-|---------|-------------------|--------------|--------------|---------|
+| Préfixe | Sinapps Ressource | Sinapps path | Sinapps name |
+|---------|-------------------|--------------|--------------|
 | Cause du sinistre  | dossierSinistre | properties.sinistre.caracteristiques.cause | label |
 | Détail du sinistre | dossierSinistre | properties.sinistre.caracteristiques.detail | name |
 | Dommages déclarés | Mission | properties.dossier.sinistre | dommagesDeclares |
