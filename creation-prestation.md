@@ -1,9 +1,10 @@
-** Evènement ** : PrestationCree
-** Objets Salesforce Créés ** : Case, Comment, Account
-** Ressources Sinapps ** : Prestation, Mission, DossierSinistre, SuiviInforation
-** Mapping des données **
+**Evènement** : PrestationCree
+**Objets Salesforce Créés** : Case, Comment, Account
+**Ressources Sinapps** : Prestation, Mission, DossierSinistre, SuiviInforation
 
-# Creation d'un compte
+# Mapping des données
+
+## Creation d'un compte
 
 Chaque nouvelle prestation entraine la création d'un nouveau compte possedant une clé de mission. Si la clé de mission est déjà présente en base de données le compte ne doit pas être créé ni aucun autre objet. Ceci permet d'éviter des erreurs de rejeux intempestif.
 
@@ -43,7 +44,7 @@ Les addresses 1,2,3 et 4 sont séparées par des retours à la ligne et concaté
 | Account | Autre_telephone_pro__c | Mission | properties.dossier.acteurs[0].personne.coordonnees | telPersonnel | pour les professionnels uniquement |
 | Account | CleMission__c | Mission |  |  | calcul xxxx|
 
-# Creation d'une affaire
+## Creation d'une affaire
 
 Chaque nouvelle prestation entraine la création d'une nouvelle affaire possedant une clé de mission. Si la clé de mission est déjà présente en base de données l'affaire ne doit pas être créée. Ceci permet d'éviter des erreurs de rejeux intempestif. Les commentaires associés à l'affaire ne doivent pas non plus créer de doublons dans ce cas.
 
@@ -81,7 +82,7 @@ On détermine si un compte correspond à un particulier ou à un professionnel e
 | Case | Sinapps_Id_Mission__c |  |  | Sinapps_Id_Mission__c   |  |
 | Case | TECH_RefMission__c |  |  | MissionnementNumero  |  |
 
-# Creation du premier commentaire
+## Creation du premier commentaire
 
 | Salesforce Object | Salesforce Fields | Sinapps Ressource | Sinapps path | Sinapps name | Comments|
 |-------------------|-------------------|-------------------|--------------|--------------|---------|
@@ -90,7 +91,7 @@ On détermine si un compte correspond à un particulier ou à un professionnel e
 | MessageClient__c | Type__c |  |  |  |  'Commentaires initiaux de mission' |
 | MessageClient__c | Affaire__c |  |  |  |  Id du Case |
 
-# Creation du second commentaire
+## Creation du second commentaire
 
 | Salesforce Object | Salesforce Fields | Sinapps Ressource | Sinapps path | Sinapps name | Comments|
 |-------------------|-------------------|-------------------|--------------|--------------|---------|
@@ -99,7 +100,7 @@ On détermine si un compte correspond à un particulier ou à un professionnel e
 | MessageClient__c | Type__c |  |  |  |  'Informations initiales de la mission' |
 | MessageClient__c | Affaire__c |  |  |  |  Id du Case |
 
-## Contenu du commentaire
+### Contenu du commentaire
 
 | Préfixe | Sinapps Ressource | Sinapps path | Sinapps name | Comments|
 |---------|-------------------|--------------|--------------|---------|
@@ -120,7 +121,7 @@ On détermine si un compte correspond à un particulier ou à un professionnel e
 | Type de mission  | Mission | mission.typeMission | name | 
 | Référence mission  | Mission | properties.mission | numero |
 | Assureur émetteur  | Mission | properties.missioncontactAssureur.value.personne | nom |
-| Entreprise mandatée | Prestation | properties |  prestataireId | *** 
+| Entreprise mandatée | Prestation | properties |  prestataireId |
 | Date de missionnement | Mission | properties.mission | dateDeMissionnement |
 | Type de risque | dossierSinistre | properties.risques[0].typeRisque | label |
 | Usage du risque | dossierSinistre | properties.risques[0].usageAssure | label |
