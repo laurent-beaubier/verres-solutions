@@ -1,8 +1,10 @@
 **Evènement** : PrestationCree
 
-**Objets Salesforce Créés** : Case, Comment, Account
+**Objets Salesforce Créés** : Case, MessageClient__c, Account
 
 **Ressources Sinapps** : Prestation, Mission, DossierSinistre, SuiviInforation
+
+**Date de mise à jour** : 19/05/2022
 
 # Mapping des données
 
