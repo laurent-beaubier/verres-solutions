@@ -1,0 +1,34 @@
+Commentaires champs non mappés
+
+"* Intermédiaire | (row_missions.IntermediairePersonneNom==null?"":(
+"Nom: "+(row_missions.IntermediairePersonneCivilite==null?"":row_missions.IntermediairePersonneCivilite)+" "+ (row_missions.IntermediairePersonneNom==null?"":row_missions.IntermediairePersonneNom)+ " "+
+(row_missions.IntermediairePersonnePrenom==null?"":row_missions.IntermediairePersonnePrenom)+" , Adresse :" +(row_missions.IntermediairePersonneAdresse1==null?"":row_missions.IntermediairePersonneAdresse1)+" "+(row_missions.IntermediairePersonneAdresse2==null?"":row_missions.IntermediairePersonneAdresse2)+" "+(row_missions.IntermediairePersonneAdresse3==null?"":row_missions.IntermediairePersonneAdresse3)+
+" "+(row_missions.IntermediairePersonneAdresseCP==null?"":row_missions.IntermediairePersonneAdresseCP)+" "+(row_missions.IntermediairePersonneAdresseLocalite==null?"":row_missions.IntermediairePersonneAdresseLocalite)+
+" , Téléphone personnel: "+(row_missions.IntermediairePersonneCoordTelPerso==null?"":row_missions.IntermediairePersonneCoordTelPerso)+", Téléphone Professionnel : "+ (row_missions.IntermediairePersonneCoordTelPro==null?"":row_missions.IntermediairePersonneCoordTelPro)+
+", Téléphone Portable : "+(row_missions.IntermediairePersonneCoordTelPortable==null?"":row_missions.IntermediairePersonneCoordTelPortable)+", Email : "
++(row_missions.IntermediairePersonneCoordEmail==null?"":row_missions.IntermediairePersonneCoordEmail)))+
+", Fax : "+(row_missions.IntermediairePersonneCoordFax==null?"":row_missions.IntermediairePersonneCoordFax)+"\n" +
+
+Représentant 1 : "+(row_missions.AssureRepresentantsPersonneNom==null?"":((row_missions.AssureRepresentantsQualite==null?"":row_missions.AssureRepresentantsQualite)+" - "+(row_missions.
+AssureRepresentantsPersonneCivilite==null?"":row_missions.AssureRepresentantsPersonneCivilite)+" "+ (row_missions.AssureRepresentantsPersonneNom==null?"":row_missions.AssureRepresentantsPersonneNom)+" "+
+(row_missions.AssureRepresentantsPersonnePrenom==null?"":row_missions.AssureRepresentantsPersonnePrenom)+" , Adresse :" +(row_missions.AssureRepresentantsPersonneAdresse==null?"":row_missions.AssureRepresentantsPersonneAdresse)+" "+(row_missions.AssureRepresentantsPersonneAdresse2==null?"":row_missions.AssureRepresentantsPersonneAdresse2)+" "+(row_missions.AssureRepresentantsPersonneAdresse3==null?"":row_missions.AssureRepresentantsPersonneAdresse3)+""
++(row_missions.AssureRepresentantsPersonneAdresse4==null?"":row_missions.AssureRepresentantsPersonneAdresse4)+ 
+" "+(row_missions.AssureRepresentantsPersonneAdresseCP==null?"":row_missions.AssureRepresentantsPersonneAdresseCP)+"  "+(row_missions.AssureRepresentantsPersonneAdresseLocalite==null?"":row_missions.AssureRepresentantsPersonneAdresseLocalite)+
+" "+(row_missions.AssureRepresentantsPersonneAdressePays==null?"":row_missions.AssureRepresentantsPersonneAdressePays)+
+", Téléphone personnel: "+(row_missions.AssureRepresentantsPersonneCoordonneeTelPerso==null?"":row_missions.AssureRepresentantsPersonneCoordonneeTelPerso)+", Téléphone Professionnel : "+ (row_missions.AssureRepresentantsPersonneCoordonneeTelPro==null?"":row_missions.AssureRepresentantsPersonneCoordonneeTelPro)+
+", Téléphone Portable : "+(row_missions.AssureRepresentantsPersonneCoordonneeTelPortable==null?"":row_missions.AssureRepresentantsPersonneCoordonneeTelPortable)+", Email : "
++(row_missions.AssureRepresentantsPersonneCoordonneeEmail==null?"":row_missions.AssureRepresentantsPersonneCoordonneeEmail)+
+", Fax : "+(row_missions.AssureRepresentantsPersonneCoordonneeFax==null?"":row_missions.AssureRepresentantsPersonneCoordonneeFax)))+"\n" +
+Représentant 2 : "+(row_missions.AssureRepresentantsPersonneNom1==null?"":(
+(row_missions.AssureRepresentantsQualite1==null?"":row_missions.AssureRepresentantsQualite1)+" - "+(row_missions.AssureRepresentantsPersonneCivilite1==null?"":row_missions.AssureRepresentantsPersonneCivilite1)+" "+ (row_missions.AssureRepresentantsPersonneNom1==null?"":row_missions.AssureRepresentantsPersonneNom1)+" "+
+(row_missions.AssureRepresentantsPersonnePrenom1==null?"":row_missions.AssureRepresentantsPersonnePrenom1)+" , Adresse :" +(row_missions.AssureRepresentantsPersonneAdresse1==null?"":row_missions.AssureRepresentantsPersonneAdresse1)+" "+(row_missions.AssureRepresentantsPersonneAdresse12==null?"":row_missions.AssureRepresentantsPersonneAdresse12)+" "+(row_missions.AssureRepresentantsPersonneAdresse13==null?"":row_missions.AssureRepresentantsPersonneAdresse13)+""
++(row_missions.AssureRepresentantsPersonneAdresse14==null?"":row_missions.AssureRepresentantsPersonneAdresse14)+ 
+" "+(row_missions.AssureRepresentantsPersonneAdresse1CP==null?"":row_missions.AssureRepresentantsPersonneAdresse1CP)+"  "+(row_missions.AssureRepresentantsPersonneAdresse1Localite==null?"":row_missions.AssureRepresentantsPersonneAdresse1Localite)+
+" "+(row_missions.AssureRepresentantsPersonneAdresse1Pays==null?"":row_missions.AssureRepresentantsPersonneAdresse1Pays)+
+", Téléphone personnel: "+(row_missions.AssureRepresentantsPersonneCoordonneeTelPerso1==null?"":row_missions.AssureRepresentantsPersonneCoordonneeTelPerso1)+",Téléphone Professionnel : "+ (row_missions.AssureRepresentantsPersonneCoordonneeTelPro1==null?"":row_missions.AssureRepresentantsPersonneCoordonneeTelPro1)+
+", Téléphone Portable : "+(row_missions.AssureRepresentantsPersonneCoordonneeTelPortable1==null?"":row_missions.AssureRepresentantsPersonneCoordonneeTelPortable1)+", Email : "
++(row_missions.AssureRepresentantsPersonneCoordonneeEmail1==null?"":row_missions.AssureRepresentantsPersonneCoordonneeEmail1)+
+", Fax : "+(row_missions.AssureRepresentantsPersonneCoordonneeFax1==null?"":row_missions.AssureRepresentantsPersonneCoordonneeFax1)))+"\n" +
+
+Date d'ancienneté : "+(row_missions.AssureDateAnciennete==null?"":TalendDate.formatDate("dd/MM/yyyy",row_missions.AssureDateAnciennete)) +"\n" +
+
