@@ -84,7 +84,6 @@ On détermine si un compte correspond à un particulier ou à un professionnel e
 | Franchise_a_collecter__c | dossierSinistre | properties.contrats[0].franchise.value | montant | le premier qui est renseigné |
 | ^ | dossierSinistre | properties.franchiseApplicable.value | montant | ^ |
 | Franchise_collectee__c |  |  |  | false  |
-| TechCoveaExecution__c |  |  |  | Id de mission  |
 | TVA_a_collecter__c |  |  |  | vrai pour une entreprise faux sinon  |
 | Type_de_Local__c |  |  | AssureRisqueTypeRisqueLabel  |  |
 | Usage_Local__c |  |  | AssureRisqueUsageAssureLabel  |  |
@@ -97,6 +96,7 @@ On détermine si un compte correspond à un particulier ou à un professionnel e
 | Numero_Evenement_Sinapps__c | Event |  properties | id | numéro de l'évènement de création de mission |
 | Sinapps_Id_Prestation__c | Prestation | properties | id |  |
 | Sinapps_Id_Mission__c | Mission |  properties| id |  |
+| TechCoveaExecution__c | Mission |  properties| id |  |
 
 ### Tranco des types de mission
 
