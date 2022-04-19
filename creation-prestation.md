@@ -81,22 +81,22 @@ On détermine si un compte correspond à un particulier ou à un professionnel e
 | Nature_du_sinistre | dossierSinistre | properties.sinistre.caracteristiques.nature | label | voir Tranco des natures de mission
 | TechAffaireInterface__c |  |  |  | true |
 | Site_d_intervention__c |  |  |  | Le site d'intervention créé par automatisme à la création du compte (lookup vers le compte)  
-| Franchise_a_collecter__c |  |  | MissionnementFranchiseMontant ou franchiseApplicable | le premier qui est renseigné |
+| Franchise_a_collecter__c | dossierSinistre | properties.contrats[0].franchise.value | montant | le premier qui est renseigné |
 | ^ | dossierSinistre | properties.franchiseApplicable.value | montant | ^ |
 | Franchise_collectee__c |  |  |  | false  |
 | TechCoveaExecution__c |  |  |  | Id de mission  |
 | TVA_a_collecter__c |  |  |  | vrai pour une entreprise faux sinon  |
 | Type_de_Local__c |  |  | AssureRisqueTypeRisqueLabel  |  |
 | Usage_Local__c |  |  | AssureRisqueUsageAssureLabel  |  |
-| Suivi_assure_activite_donneur_ordre__c |  |  | suiviAssureStatus | faux si suiviAssureStatus.equals = "Desactive"   |
+| Suivi_assure_activite_donneur_ordre__c | SuiviInformation | properties.statutSuiviInformation | name | faux si suiviAssureStatus.equals = "Desactive"   |
 | Num_Contrat__c | dossierSinistre | properties.contrat.numero | label  |  |
-| Qualite_Assure__c |  |  | AssureRisqueRelationAssureLabel  |  |
+| Qualite_Assure__c | Mission | properties.dossier.acteurs[0].relationAuRisque | label  |  |
 | Date_du_sinistre__c | dossierSinistre | properties.sinistre | date  |  |
-| TypeDeMission__c |  |  | typeDeMissions |  | voir Tranco des types de mission 
-| Numero_Evenement_Sinapps__c | Event |  properties | id | numéro de l'évènement de création de mission |
+| TypeDeMission__c | Mission | mission.typeMission | name | voir Tranco des types de mission 
 | AssureurId |  |  | AssureurId  |  |
-| Sinapps_Id_Prestation__c |  |  | Sinapps_Id_Prestation__c  |  |
-| Sinapps_Id_Mission__c |  |  | Sinapps_Id_Mission__c   |  |
+| Numero_Evenement_Sinapps__c | Event |  properties | id | numéro de l'évènement de création de mission |
+| Sinapps_Id_Prestation__c | Prestation | properties | id |  |
+| Sinapps_Id_Mission__c | Mission |  properties| id |  |
 | TECH_RefMission__c |  |  | MissionnementNumero  |  |
 
 ### Tranco des types de mission
