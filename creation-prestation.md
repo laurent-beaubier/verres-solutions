@@ -1,13 +1,17 @@
-# Création d'une prestation dans SINAPPS
+# Création d'une prestation
 
 **Evènement** : PrestationCree
+
 **Objets Salesforce Créés** : Case, MessageClient__c, Account
+
 **Ressources Sinapps** : Prestation, Mission, DossierSinistre, SuiviInforation
+
 **Date de mise à jour** : 19/05/2022
+
 
 ## Creation d'un compte
 
-Chaque nouvelle prestation entraine la création d'un nouveau Account (Compte) avec le numéro d'évènement Sinapps correspondant à la création de la prestation associée.
+Chaque nouvelle prestation Sinappes génère un nouveau Account (Compte) avec le numéro d'évènement Sinapps correspondant à la création de la prestation associée.
 
 Si un compte avec ce numéro d'évènement est déjà présente en base de données le compte ne doit pas être créé ni aucun autre objet. Ceci permet d'éviter des erreurs de rejeux intempestif (idempotence).
 
@@ -50,15 +54,16 @@ Les addresses 1,2,3 et 4 sont séparées par des retours à la ligne et concaté
 ### Tranco des civilités
 
 |**Sinapps** |**Noé** |
-|---------|-----|
+|------------|--------|
 | Professeur | M. |
 | Maître | M. |
 | Monsieur | M. |
 | Madame| Mme |
 | Autres valeurs | ne pas mettre à jour le champ |
+
 ## Creation d'une affaire
 
-Chaque nouvelle prestation entraine la création d'une nouveau **Case** (affaire). 
+Chaque nouvelle prestation génère un nouveau **Case** (Affaire). 
 
 Comme pour le compte l'idempotence est assurée par la présence d'un champ contenant le numéro d'évènement.
 
@@ -69,7 +74,7 @@ On détermine si un compte correspond à un particulier ou à un professionnel e
 | Type |  |  | 'Vitrage de menuiserie'  |
 | Status |  |  | 'Nouvelle'  |
 | Description | Mission | properties.dossier.sinistre.dommagesDeclares | "Dommages déclarés : " sur une première ligne |
-| ^ |  |  | MissionnementSinistreCirconstances | "Circonstances déclarées : "  sur une seconde ligne |
+| ^ | dossierSinistre | properties.sinistre.circonstancesDeclarees | "Circonstances déclarées : "  sur une seconde ligne |
 | ^ | dossierSinistre | properties.sinistre.caracteristiques.detail.name |  "Détail du sinistre : " sur une 3eme ligne  |
 | ^ | Mission | properties.dossier.sinistre.caracteristiques.cause.label  | "Cause du sinistre : " sur une 4eme ligne |
 | Client_final__c |  | | Le compte nouvellement créé  |
