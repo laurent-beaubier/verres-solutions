@@ -4,7 +4,7 @@
 
 **Objets Salesforce Créés** : Case, MessageClient__c
 
-**Ressources Sinapps** : Prestation, Mission
+**Ressources Sinapps** : Prestation
 
 **Date de mise à jour** : 19/04/2022
 
@@ -25,5 +25,5 @@ Il faut créer un nouvel enregistrement **MessageClient__c** (Commentaire d'annu
 | Salesforce Fields | Sinapps Ressource | Sinapps path | Comments|
 |-------------------|-------------------|--------------|---------|
 | Contenu__c | Prestation | properties.finPrestation.motif.label |  |
-| Type__c |  | | Mission Annulée |
+| Type__c |  | | 'Mission Annulée' |
 | Affaire__c |  |  | Identifiant de l'affaire annulée |
