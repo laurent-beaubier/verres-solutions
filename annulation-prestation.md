@@ -15,7 +15,7 @@ L'enregistrement **Case** (Affaire) à mettre à jour possède l'identifiant de 
 
 Salesforce Fields | Sinapps Ressource | Sinapps path | Comments|
 |-------------------|-------------------|-------------------|--------------|---------|
-AnnulationExtranet__c |  |  |  |
+AnnulationExtranet__c |  |  | true |
 Anomalie_detectee__c |  |  | true |
 
 ## Création d'un commentaire
