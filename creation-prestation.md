@@ -71,16 +71,16 @@ On détermine si un compte correspond à un particulier ou à un professionnel e
 
 |**Salesforce Fields** |**Sinapps Ressource** |**Sinapps path** |**Comments**|
 |----------------------|----------------------|-----------------|------------|
-| Type |  |  | 'Vitrage de menuiserie'  |
-| Status |  |  | 'Nouvelle'  |
+| Type |  |  | 'Vitrage de menuiserie' |
+| Status |  |  | 'Nouvelle' |
 | Description | Mission | properties.dossier.sinistre.dommagesDeclares | "Dommages déclarés : " sur une première ligne |
 | ^ | dossierSinistre | properties.sinistre.circonstancesDeclarees | "Circonstances déclarées : "  sur une seconde ligne |
 | ^ | dossierSinistre | properties.sinistre.caracteristiques.detail.name |  "Détail du sinistre : " sur une 3eme ligne  |
 | ^ | Mission | properties.dossier.sinistre.caracteristiques.cause.label  | "Cause du sinistre : " sur une 4eme ligne |
 | Client_final__c |  | | Le compte nouvellement créé  |
-| Reference_dossier__c | dossierSinistre | properties.sinistre.reference |   |
+| Reference_dossier__c | dossierSinistre | properties.sinistre.reference | |
 | TECH_RefSinistre__c | dossierSinistre | properties.sinistre.reference | |
-| Nature_du_sinistre | dossierSinistre | properties.sinistre.caracteristiques.nature.label | voir Tranco des natures de mission | |
+| Nature_du_sinistre | dossierSinistre | properties.sinistre.caracteristiques.nature.label | voir Tranco des natures de mission |
 | TechAffaireInterface__c | |  | true |
 | Site_d_intervention__c | |  | Le site d'intervention créé par automatisme à la création du compte (lookup vers le compte) | 
 | Franchise_a_collecter__c | dossierSinistre | properties.contrats[0].franchise.value.montant | le premier qui est renseigné |
