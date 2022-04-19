@@ -77,23 +77,23 @@ On détermine si un compte correspond à un particulier ou à un professionnel e
 | ^ | dossierSinistre | properties.sinistre.circonstancesDeclarees | "Circonstances déclarées : "  sur une seconde ligne |
 | ^ | dossierSinistre | properties.sinistre.caracteristiques.detail.name |  "Détail du sinistre : " sur une 3eme ligne  |
 | ^ | Mission | properties.dossier.sinistre.caracteristiques.cause.label  | "Cause du sinistre : " sur une 4eme ligne |
-| Client_final__c |  | | Le compte nouvellement créé  |
+| Client_final__c |  |  | Le compte nouvellement créé  |
 | Reference_dossier__c | dossierSinistre | properties.sinistre.reference | |
 | TECH_RefSinistre__c | dossierSinistre | properties.sinistre.reference | |
 | Nature_du_sinistre | dossierSinistre | properties.sinistre.caracteristiques.nature.label | voir Tranco des natures de mission |
 | TechAffaireInterface__c | |  | true |
-| Site_d_intervention__c | |  | Le site d'intervention créé par automatisme à la création du compte (lookup vers le compte) | 
+| Site_d_intervention__c |  |  | Le site d'intervention créé par automatisme à la création du compte (lookup vers le compte) | 
 | Franchise_a_collecter__c | dossierSinistre | properties.contrats[0].franchise.value.montant | le premier qui est renseigné |
 | ^ | dossierSinistre | properties.franchiseApplicable.value.montant | ^ |
 | Franchise_collectee__c |  | | false  |
-| TVA_a_collecter__c |  | | vrai pour une entreprise faux sinon  |
+| TVA_a_collecter__c |  |  | vrai pour une entreprise faux sinon  |
 | Type_de_Local__c | dossierSinistre | properties.risques[0].typeRisque.label  |  |
 | Usage_Local__c | dossierSinistre | properties.risques[0].usageAssure.label  |  |
 | Suivi_assure_activite_donneur_ordre__c | SuiviInformation | properties.statutSuiviInformation.name | faux si suiviAssureStatus.equals = "Desactive"   |
 | Num_Contrat__c | dossierSinistre | properties.contrat.numero.label  |  |
 | Qualite_Assure__c | Mission | properties.dossier.acteurs[0].relationAuRisque.label  |  |
 | Date_du_sinistre__c | dossierSinistre | properties.sinistre.date  |  |
-| TypeDeMission__c | Mission | mission.typeMission.name | voir Tranco des types de mission 
+| TypeDeMission__c | Mission | mission.typeMission.name | voir Tranco des types de mission |
 | AssureurId | Mission | properties.dossier.assureurId  |  |
 | Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de mission |
 | Sinapps_Id_Prestation__c | Prestation | properties.id |  |
