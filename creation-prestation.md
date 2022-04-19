@@ -6,7 +6,7 @@
 
 **Ressources Sinapps** : Prestation, Mission, DossierSinistre, SuiviInforation
 
-**Date de mise à jour** : 19/05/2022
+**Date de mise à jour** : 19/04/2022
 
 
 ## Creation d'un compte
