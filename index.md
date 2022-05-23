@@ -1,4 +1,5 @@
-# Liste des interfaces
+# Flux SINAPPS
+## Liste des flux
 
 Les interfaces correspondent à des actions réalisées dans l'extranet Sinapps.
 Certaines interfaces correspondent à des récupérations des évènements qui ont eu lieu dans l'extranet SINAPPS:
@@ -15,5 +16,11 @@ D'autres interfaces correspondent à des actions réalisées depuis Salesforce q
 - [MAJ rdv pose](maj-rdv-pose.md)
 - [MAJ email](maj-email.md)
 
-Voir le contexte pour les paramètres
+## Paramètres globaux de l'interface
+
+Url de Base des flux SINAPPS
+- baseUrl = "https://sinapps-ird.vabf.darva.com"; //Recette
+- baseUrl = "https://sinapps-ird.darva.com"; // Prod
+
+Voir le contexte pour les autres paramètres
 - [Paramètres](context.txt)

@@ -1,42 +1,36 @@
 #  Envoi Photo
+**Date de mise à jour** : 20/05/2022
 
-**Déclencheur** : à détailler à partir du CaseHandler
+**Déclencheur** : Le flux se déclenche si un champ dont le nom contient 'Photo' change de valeur. 
+Il existe plusieurs champs qui contiennent Photo dans leur nom. La récupération des champs doit donc être dynamique
 
 **Objets Salesforce Source** : Case
 
+**Champs Salesforce Source** : 
+- Case > CleMission__c
+- Case > TechCoveaExecution__c
+- Case > Nom du champ Photo modifié
+- Case > Nouvelle valeur du champ modifié (il s'agit d'une URL)
+
 **Ressources Sinapps à mettre àjour** : Mission
+## Endpoint pour récupérer l'URL de l'appel SINNAPPS** 
+Il s'agit de récupérer la commande 'ajouterPhoto' sur la mission avec la mécanique de découvrabilité de l'API.
 
-**Date de mise à jour** : 20/05/2022
+Ce qui devrait revoyer une URL proche de : <baseUrl>+/core/api/covea/missions/<missionId>/commands/ajouterPhoto
+## Requête SINAPPS
 
-## Envoi d'une photo
+Faire un appel au format multipart/form-data :
+VERB = PUT
 
-baseUrl = "https://sinapps-ird.vabf.darva.com"; //Recette
+URL = voir chapitre ci-dessus
 
-baseUrl = "https://sinapps-ird.darva.com"; // Prod
+FORM PART 1 NAME  : 'file'
 
-**Endpoint pour récupérer l'URL à appel** <baseUrl>+/core/api/covea/missions/<missionId>/commands/ajouterPhoto
-Il s'agit de récupérer la commande 'ajouterPhoto' sur la mission avec la mécanique de découvrabilité de l'API
+FORM PART 1 FILENAME  : Nom du champ modifié
 
-**infos utiles à récupérer sur l'affaire (Case)**
-- salesforceField => ref_photo_name = salesforceField+".jpeg"
-- filePath
-- url
+FORM PART 1 MIME TYPE : image/jpeg
 
-String putUrl = baseUrl + context.darva_picture_dynamic_link_uri;
+FORM PART 1 CONTENT  : avec la valeur du champ modifié (nouvelle URL) il faut récupérer le contenu de la photo et l'encoder en base 64
 
-java.io.File sourceFile = new java.io.File(ref_photo_name);
-
-okhttp3.RequestBody body = new okhttp3.MultipartBody.Builder()
- .setType(okhttp3.MultipartBody.FORM)
- .addFormDataPart("file", photoName, okhttp3.RequestBody.create(okhttp3.MediaType.parse("image/jpeg"), sourceFile))
- .build();
-
-okhttp3.Request request = new okhttp3.Request.Builder()
- .url(putUrl)
- .put(body)
- .addHeader("content-type", "multipart/form-data")
- .addHeader("Cookie", fullCookies)
- .build();
-
-okhttp3.Response response = client.newCall(request).execute();
-String responseJson = response.body().string();
+## Réponse SINAPPS
+Vérifier le code HTTP de la réponse s'il est différent de 200 renvoyer une Exception fonctionnelle

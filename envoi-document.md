@@ -1,126 +1,78 @@
-type :
-document_id (contentdocumentid)
-mission_id (techwoveaexecution__c)
+#  Envoi Photo
+**Date de mise à jour** : 20/05/2022
 
-URL découvrable : context.URI_add_document1 +context.darva_mission_id +context.URI_add_document2
-Pour document : /core/api/covea/missions/<missionId>/commands/ajouterDocument
+**Déclencheur** : Le flux se déclenche si un ContentDocument de type 'Cerfa TVA réduite', 'Mandat' ou 'PV de réception' est associé une affaire (Case).
+Le déclencheur est donc sur la création d'un ContentDocumentLink. Mais les informations à récupérer sont positionnées dans le ContentVersion actif associé au ContentDocument qui a été lié.
+
+**Objets Salesforce Source** : ContentDocument
+
+**Champs Salesforce Source** : 
+- ContentVersion > Type_de_document__c
+- ContentVersion > VersionData
+- ContentDocument > Title
+- ContentDocument > FileExtension
+- Case > Sinapps_Mission_Id__c
+
+**Ressources Sinapps à mettre àjour** : Mission
+
+## Endpoint pour récupérer l'URL de l'appel SINNAPPS** 
+Il s'agit de récupérer la commande 'ajouterDocument' sur la mission avec la mécanique de découvrabilité de l'API.
+
+Ce qui devrait revoyer une URL proche de : <baseUrl>+/core/api/covea/missions/<missionId>/commands/ajouterDocument
+
+## Calcul du nom et du type de fichier
+
+filename = Type_de_document__c + "_" + Title + "." + FileExtension;
+
+| Extension | MimeType |
+|-----------|----------|
+| txt | text/plain |
+| pdf | application/pdf |
+| doc | application/msword |
+| docx | application/vnd.openxmlformats-officedocument.wordprocessingml.document |
+| xls | application/vnd.ms-excel |
+| xlsx | application/vnd.openxmlformats-officedocument.spreadsheetml.sheet |
+| odt | application/vnd.oasis.opendocument.text |
+| ods | application/vnd.oasis.opendocument.spreadsheet |
+| - | application/octet-stream|
+
+## Requête SINAPPS
 
 
-retrieveFile : "SELECT ContentDocumentId, VersionData, title, FileExtension FROM ContentVersion WHERE IsLatest = true AND ContentDocumentId='"+ context.Document_Id +"' ORDER BY CreatedDate DESC LIMIT 1"
+ ### Json des metadata
 
-Recuperation du type de media
-----------------------------
+| Type de Fichier | Json spécifique|
+|-----------|----------|
+| PV de réception | {"name" : "ProcesVerbalFinDeTravaux", "value" : "Procès verbal de fin de travaux"} |
+| Cerfa TVA réduite | {"name" : "AttestationTVA", "value" : "Attestation de TVA"} |
+| Mandat | {"name" : "DelegationDePaiement", "value" : "Délégation de paiement"} |
 
-String filename = context.darva_doc_type+ "_" + input_row.Title + "." + input_row.FileExtension;
-context.darva_doc_file_name= filename;
+{   "file" : {
+        "descriptif" :  "Descriptif de ma PJ",
+        "signature" :  true,
+        "label" : <voir le json spécifique ci-dessus>
 
-if(input_row.FileExtension != null) {
-
-	if(input_row.FileExtension.toString().equalsIgnoreCase("txt")) {
-		logger.info("Correct MediaType found for this file extension = txt");
-		context.MediaType= "text/plain";
-	
-	} else if (input_row.FileExtension.toString().equalsIgnoreCase("pdf")) {
-		logger.info("Correct MediaType found for this file extension = pdf");
-		context.MediaType= "application/pdf";
-	
-	} else if (input_row.FileExtension.toString().equalsIgnoreCase("doc")) {
-		logger.info("Correct MediaType found for this file extension = doc");
-		context.MediaType= "application/msword";
-		
-	} else if (input_row.FileExtension.toString().equalsIgnoreCase("docx")) {
-		logger.info("Correct MediaType found for this file extension = docx");
-		context.MediaType= "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-	  
-	} else if (input_row.FileExtension.toString().equalsIgnoreCase("xls")) {
-		logger.info("Correct MediaType found for this file extension = xls");
-		context.MediaType= "application/vnd.ms-excel";
-		
-	} else if (input_row.FileExtension.toString().equalsIgnoreCase("xlsx")) {
-		logger.info("Correct MediaType found for this file extension = xlsx");
-		context.MediaType= "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-		
-	} else if (input_row.FileExtension.toString().equalsIgnoreCase("odt")) {
-		logger.info("Correct MediaType found for this file extension = odt");
-		context.MediaType= "application/vnd.oasis.opendocument.text";
-	
-	} else if (input_row.FileExtension.toString().equalsIgnoreCase("ods")) {
-		logger.info("Correct MediaType found for this file extension = ods");
-		context.MediaType= "application/vnd.oasis.opendocument.spreadsheet";
-	}
-
-} else {
-	logger.info("Correct MediaType found for this file extension is DEFAULT");
-	context.MediaType= "application/octet-stream";
+    }
 }
 
-Envoi du fichier
--------------------
-String baseUrl = "https://sinapps-ird.vabf.darva.com";
-String hrefUrl1 = "/core/api/covea/missions/";
-String hrefUrl2 = context.darva_ref_mission_id;
-String hrefUrl3 = "/commands/ajouterDocument?referer=test";
-String putUrl = baseUrl + context.darva_dynamic_document_uri;
-String posttUrl = baseUrl + hrefUrl1 + hrefUrl2 + hrefUrl3;
+ ### Requête
 
-String documentName = context.darva_doc_file_name;
+Faire un appel au format multipart/form-data :
+VERB = PUT
 
-java.io.File sourceFile = new java.io.File(context.FilePath + documentName);
+URL = voir chapitre ci-dessus
 
-JSONObject labelJson = new JSONObject();
+FORM PART 1 NAME  : 'file'
 
-String docType =context.darva_doc_type;
+FORM PART 1 FILENAME  : <filename>
 
-//docType="Mandat";
-if("PV de réception".equalsIgnoreCase(docType)){
-	labelJson.put("name", "ProcesVerbalFinDeTravaux");
+FORM PART 1 MIME TYPE : 'MimeType'
 
-	labelJson.put("value", "Procès verbal de fin de travaux");
+FORM PART 1 CONTENT  : encoder en base 64 le ContentVersion.VersionData
 
-}else if("Cerfa TVA réduite".equalsIgnoreCase(docType)){
-	labelJson.put("name", "AttestationTVA");
+FORM PART 2 NAME  : 'meta'
 
-	labelJson.put("value", "Attestation de TVA");
+FORM PART 2 CONTENT  : <metaData>
 
-}else if("Mandat".equalsIgnoreCase(docType)){
-	labelJson.put("name", "DelegationDePaiement");
-
-	labelJson.put("value", "Délégation de paiement");
-
-};
-
-JSONObject fileJson = new JSONObject();
-
-fileJson.put("label", labelJson);
-
-fileJson.put("descriptif", "Descriptif de ma PJ");
-
-//if("Cerfa".equalsIgnoreCase(docType) || "Mandat".equalsIgnoreCase(docType))
-
-fileJson.put("signature", true);
-
-JSONObject globalFileJson = new JSONObject();
-
-globalFileJson.put("file", fileJson);
-
-okhttp3.RequestBody requestBodyMetaData = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), globalFileJson.toString());
-
-String mimeType = "application/pdf";
-
-String metaData = globalFileJson.toString();
-
-okhttp3.RequestBody body = new okhttp3.MultipartBody.Builder()
- .setType(okhttp3.MultipartBody.FORM)
- .addFormDataPart("file", documentName, okhttp3.RequestBody.create(okhttp3.MediaType.parse(context.MediaType), sourceFile))
- .addFormDataPart("meta", metaData)
- .build();
-
-okhttp3.Request request = new okhttp3.Request.Builder()
- .url(putUrl)
- .put(body)
- .addHeader("Cookie", fullCookies)
- .build();
-
-okhttp3.Response response = client.newCall(request).execute();
-
-String responseJson = response.body().string();
+## Réponse SINAPPS
+Vérifier le code HTTP de la réponse s'il est différent de 200 renvoyer une Exception fonctionnelle
