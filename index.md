@@ -18,4 +18,4 @@ D'autres interfaces correspondent à des actions réalisées depuis Salesforce q
 
 
 Voir le contexte pour les paramètres
-- [Paramètres](context.xml)
+- [Paramètres](context.txt)
