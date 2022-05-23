@@ -15,26 +15,41 @@ String hrefUrl1 = context.URI_take_RDV_travaux;
 String hrefUrl2 = context.darva_ref_mission_id;
 String hrefUrl3 = context.URI_take_RDV2;
 String putUrl = baseUrl + context.darva_rdv_dynamic_link_uri;
+
 String travauxDate = routines.TalendDate.formatDate("yyyy-MM-dd",context.new_date_metrage);
+
 String travauxHeure = routines.TalendDate.addDate(routines.TalendDate.formatDate("HH:mm:ss.SSSXXX",context.new_date_metrage),"HH:mm:ss.SSSXXX",1,"HH");
+
 JSONObject valueJson = new JSONObject();
+
 valueJson.put("dateDebut", travauxDate);
+
 valueJson.put("heureDebut", travauxHeure);
+
 JSONObject planificationJson = new JSONObject();
+
 planificationJson.put("name" , "PlanificationPlage");
+
 planificationJson.put("value" , valueJson);
+
 JSONObject globalplanificationJson = new JSONObject();
+
 globalplanificationJson.put("planification" , planificationJson);
+
 okhttp3.RequestBody requestBodyMetaData = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), globalplanificationJson.toString());
+
 okhttp3.RequestBody body = new okhttp3.MultipartBody.Builder()
  .setType(okhttp3.MultipartBody.FORM)
  .addFormDataPart("horaire", null,requestBodyMetaData)
  .build();
+
 okhttp3.Request request = new okhttp3.Request.Builder()
  .url(putUrl)
  .put(requestBodyMetaData)
  .addHeader("Cookie", fullCookies)
  .build();
+
 okhttp3.Response response = client.newCall(request).execute();
+
 String responseJson = response.body().string();
 

@@ -19,30 +19,50 @@ String hrefUrl3 = context.URI_take_RDV2;
 String putUrl = baseUrl + context.darva_rdv_dynamic_link_uri;
 
 String travauxDate = routines.TalendDate.formatDate("yyyy-MM-dd",context.new_date_pose);
+
 ZoneId defaultZoneId = ZoneId.of("CET");
+
 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");//'2011-12-03T10:15:30Z'.
+
 String sdate = dateFormat.format(context.new_date_pose);
+
 LocalDateTime pp = LocalDateTime.parse(sdate,DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+
 ZonedDateTime currentUTCTime = pp.atZone(ZoneId.of("UTC"));
+
 ZonedDateTime currentCETime = currentUTCTime.withZoneSameInstant(defaultZoneId);
+
 String travauxHeure = currentCETime.format(DateTimeFormatter.ofPattern("HH:mm"));
+
 JSONObject valueJson = new JSONObject();
+
 valueJson.put("dateDebut", travauxDate);
+
 valueJson.put("heureDebut", travauxHeure);
+
 JSONObject planificationJson = new JSONObject();
+
 planificationJson.put("name" , "PlanificationPlage");
+
 planificationJson.put("value" , valueJson);
+
 JSONObject globalplanificationJson = new JSONObject();
+
 globalplanificationJson.put("planification" , planificationJson);
+
 okhttp3.RequestBody requestBodyMetaData = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), globalplanificationJson.toString());
+
 okhttp3.RequestBody body = new okhttp3.MultipartBody.Builder()
  .setType(okhttp3.MultipartBody.FORM)
  .addFormDataPart("horaire", null,requestBodyMetaData)
  .build();
+
 okhttp3.Request request = new okhttp3.Request.Builder()
  .url(putUrl)
  .put(requestBodyMetaData)
  .addHeader("Cookie", fullCookies)
  .build();
+
 okhttp3.Response response = client.newCall(request).execute();
+
 String responseJson = response.body().string();
