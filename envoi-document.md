@@ -39,6 +39,7 @@ filename = Type_de_document__c + "_" + Title + "." + FileExtension;
 ## Requête SINAPPS
 
 
+
  ### Json des metadata
 
 | Type de Fichier | Json spécifique|
@@ -47,6 +48,7 @@ filename = Type_de_document__c + "_" + Title + "." + FileExtension;
 | Cerfa TVA réduite | {"name" : "AttestationTVA", "value" : "Attestation de TVA"} |
 | Mandat | {"name" : "DelegationDePaiement", "value" : "Délégation de paiement"} |
 
+``
 {   "file" : {
         "descriptif" :  "Descriptif de ma PJ",
         "signature" :  true,
@@ -54,6 +56,7 @@ filename = Type_de_document__c + "_" + Title + "." + FileExtension;
 
     }
 }
+``
 
  ### Requête
 
@@ -64,15 +67,16 @@ URL = voir chapitre ci-dessus
 
 FORM PART 1 NAME  : 'file'
 
-FORM PART 1 FILENAME  : <filename>
+FORM PART 1 FILENAME  : filename
 
-FORM PART 1 MIME TYPE : 'MimeType'
+FORM PART 1 MIME TYPE : MimeType
 
 FORM PART 1 CONTENT  : encoder en base 64 le ContentVersion.VersionData
 
-FORM PART 2 NAME  : 'meta'
+FORM PART 2 NAME  : meta
 
-FORM PART 2 CONTENT  : <metaData>
+FORM PART 2 CONTENT  : metaData
+
 
 ## Réponse SINAPPS
 Vérifier le code HTTP de la réponse s'il est différent de 200 renvoyer une Exception fonctionnelle
