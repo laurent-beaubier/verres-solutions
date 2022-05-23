@@ -1,46 +1,30 @@
 #  Envoi Photo
 
-**Déclencheur** : PrestationAnnulée
+**Déclencheur** : à détailler à partir du CaseHandler
 
-**Objets Salesforce Source** : Case, MessageClient__c
+**Objets Salesforce Source** : Case
 
-**Ressources Sinapps** : Prestation
+**Ressources Sinapps à mettre àjour** : Mission
 
 **Date de mise à jour** : 20/05/2022
 
-## Changement du statut de l'affaire
+## Envoi d'une photo
 
+baseUrl = "https://sinapps-ird.vabf.darva.com"; //Recette
 
-**Endpoint pour récupérer l'URL à appel** /core/api/covea/missions/<missionId>/commands/ajouterPhoto
+baseUrl = "https://sinapps-ird.darva.com"; // Prod
 
-variables :
------------
-- refDossier
-- url
-- mission_id
+**Endpoint pour récupérer l'URL à appel** <baseUrl>+/core/api/covea/missions/<missionId>/commands/ajouterPhoto
+Il s'agit de récupérer la commande 'ajouterPhoto' sur la mission avec la mécanique de découvrabilité de l'API
+
+**infos utiles à récupérer sur l'affaire (Case)**
 - salesforceField => ref_photo_name = salesforceField+".jpeg"
 - filePath
-
-Pour document : /core/api/covea/missions/<missionId>/commands/ajouterDocument
-pour rdv /core/api/covea/missions/<missionId>/commands/prendreRendezVousAvecModifications
-
-
-URL DARVA : context.URI_add_photo1 +context.darva_ref_mission_id +context.URI_add_photo2
-
-
-String baseUrl = "https://sinapps-ird.vabf.darva.com";
-String hrefUrl1 = "/core/api/covea/missions/";
-String hrefUrl2 = context.darva_ref_mission_id;
-String hrefUrl3 = "/commands/ajouterPhoto?referer=test";
-
-context.URI_add_photo1 +context.darva_ref_mission_id +context.URI_add_photo2
+- url
 
 String putUrl = baseUrl + context.darva_picture_dynamic_link_uri;
-String posttUrl = baseUrl + hrefUrl1 + hrefUrl2 + hrefUrl3;
 
-String photoName = context.darva_ref_photo_name;
-
-java.io.File sourceFile = new java.io.File(context.FilePath + photoName);
+java.io.File sourceFile = new java.io.File(ref_photo_name);
 
 okhttp3.RequestBody body = new okhttp3.MultipartBody.Builder()
  .setType(okhttp3.MultipartBody.FORM)

@@ -14,8 +14,6 @@ D'autres interfaces correspondent à des actions réalisées depuis Salesforce q
 - [MAJ rdv chiffrage](maj-rdv-chiffrage.md)
 - [MAJ rdv pose](maj-rdv-pose.md)
 - [MAJ email](maj-email.md)
-- [Chiffrage validé](chiffrage-valide.md)
-
 
 Voir le contexte pour les paramètres
 - [Paramètres](context.txt)

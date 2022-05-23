@@ -4,6 +4,8 @@ Maj_date_rdv_metrage
 ref_dossier
 -récuperation de la mission
 
+pour rdv /core/api/covea/missions/<missionId>/commands/prendreRendezVousAvecModifications
+
 appel pour touver l'id de planification context.URI_travaux.substring(0,context.URI_travaux.length()-1)  : dans la réponse : "@.properties.id" et "@.properties.planification.name" retrouve la planification
 filtrer sur "PlanificationPlage"
 context.planificationId= row16.planificationId = "@.properties.id";

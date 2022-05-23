@@ -1,6 +1,8 @@
 -refDossier
 -récuperation de la mission
 
+pour rdv /core/api/covea/missions/<missionId>/commands/prendreRendezVousAvecModifications
+
 Dans la mission récupérer :
 context.darva_ref_mission_id=(String)row20.TechCoveaExecution__c;
 context.new_date_pose= row20.Date_RDV_POSE_prevue__c;

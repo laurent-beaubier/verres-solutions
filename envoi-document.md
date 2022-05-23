@@ -3,6 +3,7 @@ document_id (contentdocumentid)
 mission_id (techwoveaexecution__c)
 
 URL découvrable : context.URI_add_document1 +context.darva_mission_id +context.URI_add_document2
+Pour document : /core/api/covea/missions/<missionId>/commands/ajouterDocument
 
 
 retrieveFile : "SELECT ContentDocumentId, VersionData, title, FileExtension FROM ContentVersion WHERE IsLatest = true AND ContentDocumentId='"+ context.Document_Id +"' ORDER BY CreatedDate DESC LIMIT 1"
