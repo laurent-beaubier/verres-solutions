@@ -1,57 +1,54 @@
-********************
-Maj_date_rdv_metrage
-********************
-ref_dossier
--récuperation de la mission
+#  EMise à jour du rendez-vous de métrage
+**Date de mise à jour** : 23/05/2022
 
-pour rdv /core/api/covea/missions/<missionId>/commands/prendreRendezVousAvecModifications
+**Déclencheur** : 
 
-appel pour touver l'id de planification context.URI_travaux.substring(0,context.URI_travaux.length()-1)  : dans la réponse : "@.properties.id" et "@.properties.planification.name" retrouve la planification
-filtrer sur "PlanificationPlage"
-context.planificationId= row16.planificationId = "@.properties.id";
+**Objets Salesforce Source** : ContentDocument
 
-appel context.URI_travaux + context.planificationId + context.URI_modif_RDV_travaux (/core/api/covea/travaux/) pour la découvrabilité
+**Champs Salesforce Source** : 
+- Case > Sinapps_Mission_Id__c
 
-String baseUrl = context.URL ;
-String hrefUrl1 = context.URI_take_RDV_travaux;
-String hrefUrl2 = context.darva_ref_mission_id;
-String hrefUrl3 = context.URI_take_RDV2;
-String putUrl = baseUrl + context.darva_rdv_dynamic_link_uri;
+**Ressources Sinapps à mettre àjour** : Mission, Planification
 
-String travauxDate = routines.TalendDate.formatDate("yyyy-MM-dd",context.new_date_metrage);
+## Endpoint pour récupérer l'URL du 1er appel SINNAPPS 
+Il s'agit de faire un appel pour touver l'id de planification 
 
-String travauxHeure = routines.TalendDate.addDate(routines.TalendDate.formatDate("HH:mm:ss.SSSXXX",context.new_date_metrage),"HH:mm:ss.SSSXXX",1,"HH");
+Ce qui devrait revoyer une URL proche de : 
+- <baseUrl>+/core/api/covea/missions/<missionId>/commands/planifierTravaux en création
+- <baseUrl>+/core/api/covea/missions/<missionId>/commands/prendreRendezVousAvecModifications en modification 
 
-JSONObject valueJson = new JSONObject();
+filtrer la réponse sur name="PlanificationPlage" et récupérer properties.id"
 
-valueJson.put("dateDebut", travauxDate);
+## Endpoint pour récupérer l'URL du second appel SINNAPPS
+Il s'agit de récupérer la commande 'planifierTravaux' en création ou la commande 'prendreRendezVousAvecModifications' en modification sur la ressource Planification avec la mécanique de découvrabilité de l'API
 
-valueJson.put("heureDebut", travauxHeure);
+Ce qui devrait donner quelque chose comme <baseUrl>+ /core/api/covea/travaux/+ planificationId + /commands/modifierPlanificationTravaux
 
-JSONObject planificationJson = new JSONObject();
+## json en paramètre de la requête de la seconde requete
 
-planificationJson.put("name" , "PlanificationPlage");
+```
+{   
+    planification : {
+        "name" : "PlanificationPlage",
+        "value" : {
+            "dateDebut" :  <date travaux>,
+            "heureDebut" :  <heure travaux>
 
-planificationJson.put("value" , valueJson);
+        }
+    }
+}
+```
 
-JSONObject globalplanificationJson = new JSONObject();
+ ### Seconde Requête
 
-globalplanificationJson.put("planification" , planificationJson);
+Faire un appel au format multipart/form-data :
+VERB = PUT
 
-okhttp3.RequestBody requestBodyMetaData = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), globalplanificationJson.toString());
+URL = voir chapitre ci-dessus
 
-okhttp3.RequestBody body = new okhttp3.MultipartBody.Builder()
- .setType(okhttp3.MultipartBody.FORM)
- .addFormDataPart("horaire", null,requestBodyMetaData)
- .build();
+FORM PART 1 NAME  : 'horaire'
 
-okhttp3.Request request = new okhttp3.Request.Builder()
- .url(putUrl)
- .put(requestBodyMetaData)
- .addHeader("Cookie", fullCookies)
- .build();
+FORM PART 1 CONTENT  : json ci-dessus
 
-okhttp3.Response response = client.newCall(request).execute();
-
-String responseJson = response.body().string();
-
+## Réponse SINAPPS
+Vérifier le code HTTP de la réponse s'il est différent de 200 renvoyer une Exception fonctionnelle

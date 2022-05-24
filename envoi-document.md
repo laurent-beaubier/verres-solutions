@@ -50,7 +50,7 @@ filename = Type_de_document__c + "_" + Title + "." + FileExtension;
 
 
 
-``
+```
 {   "file" : {
         "descriptif" :  "Descriptif de ma PJ",
         "signature" :  true,
@@ -58,7 +58,7 @@ filename = Type_de_document__c + "_" + Title + "." + FileExtension;
 
     }
 }
-``
+```
 
  ### Requête
 
