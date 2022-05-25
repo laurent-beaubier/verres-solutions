@@ -1,4 +1,4 @@
-#  Envoi Photo
+#  Envoi DOCUMENT
 **Date de mise à jour** : 20/05/2022
 
 **Déclencheur** : Le flux se déclenche si un ContentDocument de type 'Cerfa TVA réduite', 'Mandat' ou 'PV de réception' est associé une affaire (Case).
