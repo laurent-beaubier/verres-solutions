@@ -48,15 +48,21 @@ filename = Type_de_document__c + "_" + Title + "." + FileExtension;
 | Cerfa TVA réduite | {"name" : "AttestationTVA", "value" : "Attestation de TVA"} |
 | Mandat | {"name" : "DelegationDePaiement", "value" : "Délégation de paiement"} |
 
-
-
 ```
-{   "file" : {
-        "descriptif" :  "Descriptif de ma PJ",
-        "signature" :  true,
-        "label" : voir le json spécifique ci-dessus
-
-    }
+{
+  "descriptif": {
+    "label": "ReplaceWith",
+    "name": "ReplaceWith",
+    "value": <document encodé en base 64>
+  },
+  "label": {
+    <json des metadata>
+  },
+  "signature": {
+    "label": "ReplaceWith",
+    "name": "ReplaceWith",
+    "value": true
+  }
 }
 ```
 
