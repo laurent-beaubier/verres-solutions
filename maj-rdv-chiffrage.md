@@ -1,54 +1,26 @@
 #  EMise à jour du rendez-vous de métrage
 **Date de mise à jour** : 23/05/2022
 
-**Déclencheur** : 
+**Déclencheur** : Si le champ Date_RDV_METRAGE_prevue__c change sur une affaire créée depuis SINAPS alors on envoie une nouvelle date de rendez-vous à Sinapps.
 
-**Objets Salesforce Source** : ContentDocument
+**Objets Salesforce Source** : Case
 
 **Champs Salesforce Source** : 
-- Case > Sinapps_Mission_Id__c
+- Case > Sinapps_Prestation_Id__c
 
-**Ressources Sinapps à mettre àjour** : Mission, Planification
+**Ressources Sinapps à mettre àjour** : Prestation
 
-## Endpoint pour récupérer l'URL du 1er appel SINNAPPS 
-Il s'agit de faire un appel pour touver l'id de planification 
+## Endpoint pour récupérer l'URL de l'appel SINNAPPS 
+Il s'agit de récupérer la commande 'prendreRendezVous' sur la prestation avec la mécanique de découvrabilité de l'API.
 
-Ce qui devrait revoyer une URL proche de : 
-- <baseUrl>+/core/api/covea/missions/<missionId>/commands/planifierTravaux en création
-- <baseUrl>+/core/api/covea/missions/<missionId>/commands/prendreRendezVousAvecModifications en modification 
-
-filtrer la réponse sur name="PlanificationPlage" et récupérer properties.id"
-
-## Endpoint pour récupérer l'URL du second appel SINNAPPS
-Il s'agit de récupérer la commande 'planifierTravaux' en création ou la commande 'prendreRendezVousAvecModifications' en modification sur la ressource Planification avec la mécanique de découvrabilité de l'API
-
-Ce qui devrait donner quelque chose comme <baseUrl>+ /core/api/covea/travaux/+ planificationId + /commands/modifierPlanificationTravaux
-
-## json en paramètre de la requête de la seconde requete
+Ce qui devrait revoyer une URL proche de : <baseUrl>+/core/api/covea/prestation/<prestationId>/commands/prendreRendezVous
+## json en paramètre de la requête
 
 ```
 {   
-    planification : {
-        "name" : "PlanificationPlage",
-        "value" : {
-            "dateDebut" :  <date travaux>,
-            "heureDebut" :  <heure travaux>
-
-        }
-    }
+    "horaire" : "YYYY-MM-DDT00:00:00Z"    
 }
 ```
-
- ### Seconde Requête
-
-Faire un appel au format multipart/form-data :
-VERB = PUT
-
-URL = voir chapitre ci-dessus
-
-FORM PART 1 NAME  : 'horaire'
-
-FORM PART 1 CONTENT  : json ci-dessus
 
 ## Réponse SINAPPS
 Vérifier le code HTTP de la réponse s'il est différent de 200 renvoyer une Exception fonctionnelle

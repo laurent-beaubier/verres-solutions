@@ -1,0 +1,7 @@
+C:\Users\lbea.GROUP\AppData\Local\sfdx\client\7.149.1-3881a5a\bin\node.exe C:\Users\lbea.GROUP\AppData\Local\sfdx\client\7.149.1-3881a5a\bin\run hardis:config:get --level project --jsonC:\Users\lbea.GROUP\AppData\Local\sfdx\client\7.149.1-3881a5a\bin\node.exe C:\Users\lbea.GROUP\AppData\Local\sfdx\client\7.149.1-3881a5a\bin\run hardis:config:get --level user --json[sfdx-hardis] Defined "false" as git core.quotepath
+[sfdx-hardis] Defined "false" as git core.quotepath
+[sfdx-hardis] {}
+[sfdx-hardis][command] git config --local difftool.vscode.cmd code --wait --diff $LOCAL $REMOTE
+[sfdx-hardis] error: could not lock config file .git/config: File exists
+
+[sfdx-hardis] {"installedApps":["git"]}
