@@ -46,56 +46,29 @@ filename = Type_de_document__c + "_" + Title + "." + FileExtension;
 
 ## Requête SINAPPS
 
-
-
- ### Json des metadata
-
-*** Uniquement pour le cas 1) ***
-
-| Type de Fichier | Json spécifique|
-|-----------|----------|
-| PV de réception | {"name" : "ProcesVerbalFinDeTravaux", "value" : "Procès verbal de fin de travaux"} |
-| Cerfa TVA réduite | {"name" : "AttestationTVA", "value" : "Attestation de TVA"} |
-| Mandat | {"name" : "DelegationDePaiement", "value" : "Délégation de paiement"} |
-
-```
-{
-  "descriptif": {
-    "label": "ReplaceWith",
-    "name": "ReplaceWith",
-    "value": <document encodé en base 64>
-  },
-  "label": {
-    <json des metadata>
-  },
-  "signature": {
-    "label": "ReplaceWith",
-    "name": "ReplaceWith",
-    "value": true
-  }
-}
-```
-
- ### Requête
-
 Faire un appel au format multipart/form-data :
-
-Cas 1)
 * VERB = PUT
 * URL = voir chapitre ci-dessus
-* FORM PART 1 NAME  : 'file'
-* FORM PART 1 FILENAME  : filename
-* FORM PART 1 MIME TYPE : MimeType
-* FORM PART 1 CONTENT  : encoder en base 64 le ContentVersion.VersionData
-* FORM PART 2 NAME  : meta
-* FORM PART 2 CONTENT  : metaData
+
+Cas 1)
+* FORM PART 1 TYPE  : Body Parameter
+* FORM PART 1 NAME  : 'nomCleFichier'
+* FORM PART 1 VALUE  : nom du fichier
+
+* FORM PART 2 TYPE  : File
+* FORM PART 2 NAME  : meta 
+* FORM PART 2 MIME TYPE : MimeType
+* FORM PART 2 VALUE  : encoder en base 64 le ContentVersion.VersionData
 
 Cas 2)
-* URL = voir chapitre ci-dessus
-* FORM PART 1 NAME  : 'file'
-* FORM PART 1 FILENAME  : Nom du champ modifié
-* FORM PART 1 MIME TYPE : image/jpeg
-* FORM PART 1 CONTENT  : avec la valeur du champ modifié (nouvelle URL) il faut récupérer le contenu de la photo et l'encoder en base 64
+* FORM PART 1 TYPE  : Body Parameter
+* FORM PART 1 NAME  : 'nomCleFichier'
+* FORM PART 1 VALUE  : nom du fichier
+
+* FORM PART 2 TYPE  : File
+* FORM PART 2 NAME  : meta 
+* FORM PART 2 MIME TYPE : image/jpeg
+* FORM PART 2 VALUE  : avec la valeur du champ modifié (nouvelle URL) il faut récupérer le contenu de la photo et l'encoder en base 64
 
 ## Réponse SINAPPS
 Vérifier le code HTTP de la réponse s'il est différent de 200 renvoyer une Exception fonctionnelle
