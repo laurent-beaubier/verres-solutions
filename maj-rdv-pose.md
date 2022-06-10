@@ -1,5 +1,7 @@
 TOD : Fix Article
 
+La commande SINAPPS à utiliser est **planifierTravaux**
+
 -refDossier
 -récuperation de la mission
 
