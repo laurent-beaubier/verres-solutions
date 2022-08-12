@@ -1,74 +1,36 @@
+#  Mise à jour du rendez-vous de pose
+**Date de mise à jour** : 12/08/2022
+
 TOD : Fix Article
 
-La commande SINAPPS à utiliser est **planifierTravaux**
+**Déclencheur** : A la creation d'un Work Order de type POSE alors on envoie une nouvelle date de rendez-vous à Sinapps.
 
--refDossier
--récuperation de la mission
+**Ressources Sinapps à mettre à jour** : Prestation
 
-pour rdv /core/api/covea/missions/<missionId>/commands/prendreRendezVousAvecModifications
+**Objets Salesforce Source** : WorkOrder
 
-Dans la mission récupérer :
-context.darva_ref_mission_id=(String)row20.TechCoveaExecution__c;
-context.new_date_pose= row20.Date_RDV_POSE_prevue__c;
+**Champs Salesforce Source** : 
+- WorkOrder > Date_RDV__c
+- WorkOrder > CaseId > Sinapps_Id_Prestation__c
 
-appel pour touver l'id de planification context.URI_travaux.substring(0,context.URI_travaux.length()-1)  : dans la réponse : "@.properties.id" et "@.properties.planification.name" retrouve la planification
-filtrer sur "PlanificationPlage"
-context.planificationId= row16.planificationId = "@.properties.id";
+## Endpoint pour récupérer l'URL de l'appel SINNAPPS
+Il s'agit de récupérer la commande 'planifierIntervention' sur la prestation avec la mécanique de découvrabilité de l'API.
 
-appel context.URI_travaux + context.planificationId + context.URI_modif_RDV_travaux (/core/api/covea/travaux/) pour la découvrabilité
+Ce qui devrait revoyer une URL proche de : <baseUrl>+/core/api/covea/prestation/<prestationId>/commands/prendreRendezVous
+## json en paramètre de la requête
 
+```
+{
+  "planification": {
+    "name": "PlanificationPlage",
+    "label": "PlanificationPlage",
+    "value": {
+      "horizon": "string"
+    }
+  },
+  "commentaire": "string"
+}
+```
 
-String baseUrl = context.URL ;
-String hrefUrl1 = context.URI_take_RDV_travaux;
-String hrefUrl2 = context.darva_ref_mission_id;
-String hrefUrl3 = context.URI_take_RDV2;
-String putUrl = baseUrl + context.darva_rdv_dynamic_link_uri;
-
-String travauxDate = routines.TalendDate.formatDate("yyyy-MM-dd",context.new_date_pose);
-
-ZoneId defaultZoneId = ZoneId.of("CET");
-
-DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");//'2011-12-03T10:15:30Z'.
-
-String sdate = dateFormat.format(context.new_date_pose);
-
-LocalDateTime pp = LocalDateTime.parse(sdate,DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-
-ZonedDateTime currentUTCTime = pp.atZone(ZoneId.of("UTC"));
-
-ZonedDateTime currentCETime = currentUTCTime.withZoneSameInstant(defaultZoneId);
-
-String travauxHeure = currentCETime.format(DateTimeFormatter.ofPattern("HH:mm"));
-
-JSONObject valueJson = new JSONObject();
-
-valueJson.put("dateDebut", travauxDate);
-
-valueJson.put("heureDebut", travauxHeure);
-
-JSONObject planificationJson = new JSONObject();
-
-planificationJson.put("name" , "PlanificationPlage");
-
-planificationJson.put("value" , valueJson);
-
-JSONObject globalplanificationJson = new JSONObject();
-
-globalplanificationJson.put("planification" , planificationJson);
-
-okhttp3.RequestBody requestBodyMetaData = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), globalplanificationJson.toString());
-
-okhttp3.RequestBody body = new okhttp3.MultipartBody.Builder()
- .setType(okhttp3.MultipartBody.FORM)
- .addFormDataPart("horaire", null,requestBodyMetaData)
- .build();
-
-okhttp3.Request request = new okhttp3.Request.Builder()
- .url(putUrl)
- .put(requestBodyMetaData)
- .addHeader("Cookie", fullCookies)
- .build();
-
-okhttp3.Response response = client.newCall(request).execute();
-
-String responseJson = response.body().string();
+## Réponse SINAPPS
+Vérifier le code HTTP de la réponse s'il est différent de 200 renvoyer une Exception fonctionnelle
