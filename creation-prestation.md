@@ -94,7 +94,7 @@ On détermine si un compte correspond à un particulier ou à un professionnel e
 | Qualite_Assure__c | DossierSinistre | properties.acteurs[0].relationAuRisque.label  |  |
 | Date_du_sinistre__c | DossierSinistre | properties.sinistre.date  |  |
 | TypeDeMission__c | Mission | mission.typeMission.name | voir Tranco des types de mission |
-| AssureurId | DossierSinistre | properties.assureurId  |  |
+| AssureurId | DossierSinistre | properties.assureurId  | Pour un compte Perso remplir le lookup vers le compte avec le TECH_IDAssureur__c correspondant |
 | Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de mission |
 | Sinapps_Id_Prestation__c | Prestation | properties.id |  |
 | Sinapps_Id_Mission__c | Mission |  properties.id |  |
