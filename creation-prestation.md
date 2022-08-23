@@ -45,7 +45,7 @@ Les addresses 1,2,3 et 4 sont séparées par des retours à la ligne et concaté
 | ^ | DossierSinistre | properties.sinistre.adresse.adresse4 ||
 | ShippingPostalCode | DossierSinistre | properties.sinistre.adresse.codePostal ||
 | ShippingCity | DossierSinistre | properties.sinistre.adresse.localite ||
-| PersonTitle | DossierSinistre | properties.acteurs[0].personne.informationAssure.profession | pour les particuliers uniquement |
+| PersonTitle | DossierSinistre | properties.acteurs[0].informationAssure.profession | pour les particuliers uniquement |
 | Email_Pro__c | DossierSinistre | properties.acteurs[0].personne.coordonnees.email | pour les professionnels uniquement |
 | Telephone_mobile_pro__c | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPortable | pour les professionnels uniquement |
 | Autre_telephone_pro__c | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPersonnel | pour les professionnels uniquement |
