@@ -1,6 +1,6 @@
 #  Validation d'un chiffrage
 
-**Evènement** : MissionEtatChange
+**Evènement** : EtatPrestationModifie
 
 **Objets Salesforce Modifiés** : Case
 
@@ -12,7 +12,7 @@
 ## Changement du statut de l'affaire
 
 L'enregistrement **Case** (Affaire) à mettre à jour possède l'identifiant de Mission correspondant à la propriété **properties.id** dans la ressource **Event** de Sinapps.
-La mise à jour se fait uniquement si la ressource Sinapps vérifie properties.etatMission.name = "ChiffrageValide"
+La mise à jour se fait uniquement si la propriété suivante sur l'évènement remplit la condition : **items.propoerties.data.status=DevisValide**
 
 Salesforce Fields | Sinapps Ressource | Sinapps path | Comments|
 |-------------------|-------------------|-------------------|--------------|---------|
