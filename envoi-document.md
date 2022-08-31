@@ -1,6 +1,7 @@
 #  Envoi DOCUMENT
 
 **Déclencheur** : 
+
 Si un enregistrement de type DocumentLink est créé et vérifie les conditions suivantes alors il faut réaliser un appel vers SINAPPS :
 - Le champ Type_de_document__c de l'enregistrement ContentDocument associé vaut 'Cerfa TVA réduite', 'Mandat' ou 'PV de réception'
 - L'enregistrement WhatId est associé une affaire (Case).
