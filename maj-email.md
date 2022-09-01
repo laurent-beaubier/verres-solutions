@@ -4,9 +4,9 @@
 
 **Déclencheur** : Le changement d'email sur un compte personnel ou un contact doit modifier toutes les missions SINAPPS de cet individu.
 
-**Ressources Sinapps à mettre à jour** : Prestation
+**Ressources Sinapps à mettre à jour** : Dossier Sinistre
 
-**Objets Salesforce Source** : Dossier Sinistre
+**Objets Salesforce Source** : PersonAccount, Contact et Case
 
 **Champs Salesforce Source** : 
 - PersonAccount > personEmail
@@ -21,29 +21,30 @@ Cependant Salesforce n'a pas vocation à synchroniser ces données avec SINAPPS.
 
 On va donc réaliser 2 appels :
 - 1 appel pour récupérer l'adresse et les téléphone de l'assuré
-- 1 appel pour mettre à jour l'email en passant les données obligatoire adresse et téléphone en complément
+- 1 appel pour mettre à jour l'email en passant les données obligatoires adresse et téléphone en complément
 
 ## Premier appel Sinapps
 Il s'agit d'un appel HTTP GET à l'adresse du dossier sinistre :
 
 Dans la réponse il faut récupérer les valeurs des propriétés suivantes :
-${adresse1} = properties.acteurs[0].personne.adresse.adresse1
-${adresse2} = properties.acteurs[0].personne.adresse.adresse2
-${adresse3} = properties.acteurs[0].personne.adresse.adresse3
-${adresse4} = properties.acteurs[0].personne.adresse.adresse4
-${codePostal} = properties.acteurs[0].personne.adresse.codePostal
-${localite} = properties.acteurs[0].personne.adresse.localite
-${codePays} = properties.acteurs[0].personne.adresse.codePays
-${nomPays} = properties.acteurs[0].personne.adresse.nomPays
-${telPersonnel} = properties.acteurs[0].personne.coordonnees.telPersonnel
-${telPortable} = properties.acteurs[0].personne.coordonnees.telPortable
-${telProfessionnel} = properties.acteurs[0].personne.coordonnees.telProfessionnel
+- ${adresse1} = properties.acteurs[0].personne.adresse.adresse1
+- ${adresse2} = properties.acteurs[0].personne.adresse.adresse2
+- ${adresse3} = properties.acteurs[0].personne.adresse.adresse3
+- ${adresse4} = properties.acteurs[0].personne.adresse.adresse4
+- ${codePostal} = properties.acteurs[0].personne.adresse.codePostal
+- ${localite} = properties.acteurs[0].personne.adresse.localite
+- ${codePays} = properties.acteurs[0].personne.adresse.codePays
+- ${nomPays} = properties.acteurs[0].personne.adresse.nomPays
+- ${telPersonnel} = properties.acteurs[0].personne.coordonnees.telPersonnel
+- ${telPortable} = properties.acteurs[0].personne.coordonnees.telPortable
+- ${telProfessionnel} = properties.acteurs[0].personne.coordonnees.telProfessionnel
 
 ## Endpoint pour récupérer l'URL du second l'appel Sinapps
 
 Il s'agit de récupérer la commande 'modifierActeur' sur le Dossier Sinistre avec la mécanique de découvrabilité de l'API.
 
-Ce qui devrait revoyer une URL proche de : <baseUrl>+/core/api/covea/dossierSinistre/${Sinapps_DossierId__c}/commands/modifierActeur
+Ce qui devrait revoyer une URL proche de : 
+<baseUrl>+/core/api/covea/dossierSinistre/${Sinapps_DossierId__c}/commands/modifierActeur
 
 ## Json du second appel Sinapps
 
