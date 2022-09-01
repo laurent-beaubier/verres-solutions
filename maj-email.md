@@ -48,8 +48,7 @@ Ce qui devrait revoyer une URL proche de :
 
 ## Json du second appel Sinapps
 
-```
-{
+```{
   "id": "${Sinapps_ActeurId}",
   "personne": {
      "adresse": {
@@ -69,8 +68,8 @@ Ce qui devrait revoyer une URL proche de :
       "email": "${personEmail ou email}",
     }
   }
-}
-```
+}```
+
 
 ## Réponse SINAPPS
 Vérifier le code HTTP de la réponse s'il est différent de 200 renvoyer une Exception fonctionnelle
