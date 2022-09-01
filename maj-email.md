@@ -50,42 +50,24 @@ Ce qui devrait revoyer une URL proche de : ${baseUrl}+/core/api/covea/dossierSin
 ```
 {
   "id": "${Sinapps_ActeurId}",
-
   "personne": {
-
      "adresse": {
-
       "adresse1": "${adresse1}",
-
       "adresse2": "${adresse2}",
-
       "adresse3": "${adresse3}",
-
       "adresse4": "${adresse4}",
-
       "codePostal": "${codePostal}",
-
       "localite": "${localite}",
-
       "codePays": "${codePays}",
-
       "nomPays": "${nomPays}"
     },
-
     "coordonnees": {
-
       "telPersonnel": "${telPersonnel}",
-
       "telProfessionnel": "${telProfessionnel}",
-
       "telPortable": "${telPortable}",
-
       "email": "${personEmail ou email}",
-
     }
-
   }
-
 }
 ```
 
