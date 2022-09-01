@@ -1,37 +1,75 @@
-*******************************
-MAJ_EMail
-*******************************
-- cleMission
+#  Mise à jour de l'email de l'assuré (activation du suivi assuré ou SIC)
 
-"SELECT Contact.Email,TechCoveaExecution__c FROM Case WHERE CleMission__c='"+context.darva_ref_dossier+"'"
+**Date de mise à jour** : 01/09/2022
 
-context.darva_ref_mission_id=(String)row20.TechCoveaExecution__c;
-context.new_email=(String)row20.Contact_Email;
-context.URI_Maj_Email +context.darva_ref_mission_id+ context.URI_Maj_Email2
+**Déclencheur** : Le changement d'email sur un compte personnel ou un contact doit modifier toutes les missions SINAPPS de cet individu.
 
-String baseUrl = context.URL ;
-String hrefUrl1 = context.URI_Maj_Email;
-String hrefUrl2 = context.darva_ref_mission_id;
-String hrefUrl3 = context.URI_Maj_Email2;
-String putUrl = baseUrl + context.darva_email_dynamic_link_uri;
+**Ressources Sinapps à mettre à jour** : Prestation
 
-// emailAModifier
-JSONObject valueEmail = new JSONObject();
-valueEmail.put("name", "ReplaceWith");
-valueEmail.put("value", context.new_email);
+**Objets Salesforce Source** : Dossier Sinistre
 
-// JSON Global
-JSONObject globalRequestJson = new JSONObject();
-globalRequestJson.put("email" , valueEmail);
-okhttp3.RequestBody requestBodyMetaData = okhttp3.RequestBody.create(okhttp3.MediaType.parse("application/json"), globalRequestJson.toString());
-okhttp3.RequestBody body = new okhttp3.MultipartBody.Builder()
- .setType(okhttp3.MultipartBody.FORM)
- .addFormDataPart("horaire", null,requestBodyMetaData)
- .build();
-okhttp3.Request request = new okhttp3.Request.Builder()
- .url(putUrl)
- .put(requestBodyMetaData)
- .addHeader("Cookie", fullCookies)
- .build();
-okhttp3.Response response = client.newCall(request).execute();
-String responseJson = response.body().string();
+**Champs Salesforce Source** : 
+- PersonAccount > personEmail
+- PersonAccount > Sinapps_ActeurId (champ à créer)
+- Contact > email
+- Contact > Sinapps_ActeurId (champ à créer)
+- Case > Sinapps_DossierId__c (champ à créer ?)
+
+## Scénario des appels SINNAPPS 
+L'action de mise à jour de l'adresse email de l'assuré ne peut être réalisée sans préciser l'adresse et les téléphones de l'assuré (cas d'erreur fonctionnel SINAPPS).
+Cependant Salesforce n'a pas vocation à synchroniser ces données avec SINAPPS. 
+
+On va donc réaliser 2 appels :
+- 1 appel pour récupérer l'adresse et les téléphone de l'assuré
+- 1 appel pour mettre à jour l'email en passant les données obligatoire adresse et téléphone en complément
+
+## Premier appel Sinapps
+Il s'agit d'un appel HTTP GET à l'adresse du dossier sinistre :
+
+Dans la réponse il faut récupérer les valeurs des propriétés suivantes :
+${adresse1} = properties.acteurs[0].personne.adresse.adresse1
+${adresse2} = properties.acteurs[0].personne.adresse.adresse2
+${adresse3} = properties.acteurs[0].personne.adresse.adresse3
+${adresse4} = properties.acteurs[0].personne.adresse.adresse4
+${codePostal} = properties.acteurs[0].personne.adresse.codePostal
+${localite} = properties.acteurs[0].personne.adresse.localite
+${codePays} = properties.acteurs[0].personne.adresse.codePays
+${nomPays} = properties.acteurs[0].personne.adresse.nomPays
+${telPersonnel} = properties.acteurs[0].personne.coordonnees.telPersonnel
+${telPortable} = properties.acteurs[0].personne.coordonnees.telPortable
+${telProfessionnel} = properties.acteurs[0].personne.coordonnees.telProfessionnel
+
+## Endpoint pour récupérer l'URL du second l'appel Sinapps
+
+Il s'agit de récupérer la commande 'modifierActeur' sur le Dossier Sinistre avec la mécanique de découvrabilité de l'API.
+
+Ce qui devrait revoyer une URL proche de : <baseUrl>+/core/api/covea/dossierSinistre/${Sinapps_DossierId__c}/commands/modifierActeur
+
+## Json du second appel Sinapps
+
+```
+{
+  "id": "${Sinapps_ActeurId}",
+  "personne": {
+     "adresse": {
+      "adresse1": "${adresse1}",
+      "adresse2": "${adresse2}",
+      "adresse3": "${adresse3}",
+      "adresse4": "${adresse4}",
+      "codePostal": "${codePostal}",
+      "localite": "${localite}",
+      "codePays": "${codePays}",
+      "nomPays": "${nomPays}"
+    },
+    "coordonnees": {
+      "telPersonnel": "${telPersonnel}",
+      "telProfessionnel": "${telProfessionnel}",
+      "telPortable": "${telPortable}",
+      "email": "${personEmail ou email}",
+    }
+  }
+}
+```
+
+## Réponse SINAPPS
+Vérifier le code HTTP de la réponse s'il est différent de 200 renvoyer une Exception fonctionnelle
