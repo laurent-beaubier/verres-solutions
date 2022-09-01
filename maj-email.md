@@ -43,8 +43,7 @@ Dans la réponse il faut récupérer les valeurs des propriétés suivantes :
 
 Il s'agit de récupérer la commande 'modifierActeur' sur le Dossier Sinistre avec la mécanique de découvrabilité de l'API.
 
-Ce qui devrait revoyer une URL proche de : 
-<baseUrl>+/core/api/covea/dossierSinistre/${Sinapps_DossierId__c}/commands/modifierActeur
+Ce qui devrait revoyer une URL proche de : ${baseUrl}+/core/api/covea/dossierSinistre/${Sinapps_DossierId__c}/commands/modifierActeur
 
 ## Json du second appel Sinapps
 
