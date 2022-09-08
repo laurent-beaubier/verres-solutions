@@ -1,0 +1,1467 @@
+<h1 id="flux-sinapps">Flux SINAPPS</h1>
+<h2 id="paramètres-globaux-de-linterface">Paramètres globaux de
+l’interface</h2>
+<p>Url de Base des flux SINAPPS - baseUrl =
+“https://sinapps-ird.vabf.darva.com”; //Recette - baseUrl =
+“https://sinapps-ird.darva.com”; // Prod</p>
+<h2 id="liste-des-flux">Liste des flux</h2>
+<p>Les interfaces correspondent à des actions réalisées dans l’extranet
+Sinapps. Certaines interfaces correspondent à des récupérations des
+évènements qui ont eu lieu dans l’extranet SINAPPS: - <a
+href="creation-prestation.md">Création de Prestation</a> - <a
+href="annulation-prestation.md">Annulation de Prestation</a> - <a
+href="ajout-commentaire.md">Ajout de commentaire</a> - <a
+href="detection-insatisfaction.md">Détection d’une insatisfaction</a> -
+<a href="validation-chiffrage.md">Validation d’un chiffrage</a></p>
+<p>D’autres interfaces correspondent à des actions réalisées depuis
+Salesforce qui impactent SINAPPS: - <a href="envoi-photo.md">Ajout d’une
+photo</a>. - <a href="envoi-document.md">Ajout d’un document</a>. - <a
+href="maj-rdv-chiffrage.md">Prendre un rendez-vous de métrage</a>. Ce
+endpoint permet de communiquer la date et l’heure du rendez-vous de
+metrage dans SINAPPS. - <a href="maj-rdv-pose.md">Planifier les
+travaux</a>. Ce endpoint permet de communiquer la date et l’heure du
+rendez-vous de pose dans SINAPPS. - <a href="maj-email.md">Mettre à jour
+l’email Assure</a>. Ce point d’accès permet d’activer le suivi de
+l’assuré (SIC).</p>
+<h1 id="création-dune-prestation">Création d’une prestation</h1>
+<p><strong>Evènement</strong> : PrestationCree</p>
+<p><strong>Objets Salesforce Créés</strong> : Case, MessageClient__c,
+Account</p>
+<p><strong>Ressources Sinapps</strong> : Prestation, Mission,
+DossierSinistre, SuiviInforation</p>
+<p><strong>Date de mise à jour</strong> : 19/04/2022</p>
+<h2 id="creation-dun-compte">Creation d’un compte</h2>
+<p>Chaque nouvelle prestation Sinappes génère un nouveau Account
+(Compte) avec le numéro d’évènement Sinapps correspondant à la création
+de la prestation associée.</p>
+<p>Si un compte avec ce numéro d’évènement est déjà présente en base de
+données le compte ne doit pas être créé ni aucun autre objet. Ceci
+permet d’éviter des erreurs de rejeux intempestif (idempotence).</p>
+<p>On détermine si un compte correspond à un particulier ou à un
+professionnel en fonction de la valeur de la propriété
+properties.contrat.professionnel sur la ressource DossierSinistre</p>
+<p>Les addresses 1,2,3 et 4 sont séparées par des retours à la ligne et
+concaténées dans le même champ Salesforce</p>
+<table>
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 28%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Salesforce Fields</strong></th>
+<th><strong>Sinapps Ressource</strong></th>
+<th><strong>Sinapps path</strong></th>
+<th><strong>Comments</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>RecordType</td>
+<td></td>
+<td></td>
+<td>valeur selon particulier / entreprise</td>
+</tr>
+<tr class="even">
+<td>D_eduction_de_TVA__c</td>
+<td></td>
+<td></td>
+<td>vrai/faux selon entreprise/particulier</td>
+</tr>
+<tr class="odd">
+<td>Salutation</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.civilite.label</td>
+<td>pour un particulier uniquement (voir Tranco des civilités)</td>
+</tr>
+<tr class="even">
+<td>LastName</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.nom</td>
+<td>pour un particulier uniquement</td>
+</tr>
+<tr class="odd">
+<td>FirstName</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.prenom</td>
+<td>pour un particulier uniquement</td>
+</tr>
+<tr class="even">
+<td>Name</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.nom</td>
+<td>pour une entreprise uniquement</td>
+</tr>
+<tr class="odd">
+<td>Type</td>
+<td></td>
+<td></td>
+<td>valeur en dur ‘Prospect’</td>
+</tr>
+<tr class="even">
+<td>BillingStreet</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.adresse.adresse1</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.adresse.adresse2</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.adresse.adresse3</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.adresse.adresse4</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>BillingPostalCode</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.adresse.codePostal</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>BillingCity</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.adresse.localite</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Fax</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.coordonnees.telPersonnel</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>PersonMobilePhone</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.coordonnees.telPortable</td>
+<td>pour les particuliers uniquement</td>
+</tr>
+<tr class="even">
+<td>Phone</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.coordonnees.telProfessionnel</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>PersonEmail</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.coordonnees.email</td>
+<td>pour les particuliers uniquement</td>
+</tr>
+<tr class="even">
+<td>Industry</td>
+<td></td>
+<td></td>
+<td>“autre secteur d’activité” pour les entreprises uniquement</td>
+</tr>
+<tr class="odd">
+<td>ShippingStreet</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.adresse.adresse1</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.adresse.adresse2</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.adresse.adresse3</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.adresse.adresse4</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>ShippingPostalCode</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.adresse.codePostal</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>ShippingCity</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.adresse.localite</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>PersonTitle</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].informationAssure.profession</td>
+<td>pour les particuliers uniquement</td>
+</tr>
+<tr class="even">
+<td>Email_Pro__c</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.coordonnees.email</td>
+<td>pour les professionnels uniquement</td>
+</tr>
+<tr class="odd">
+<td>Telephone_mobile_pro__c</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.coordonnees.telPortable</td>
+<td>pour les professionnels uniquement</td>
+</tr>
+<tr class="even">
+<td>Autre_telephone_pro__c</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.coordonnees.telPersonnel</td>
+<td>pour les professionnels uniquement</td>
+</tr>
+<tr class="odd">
+<td>Numero_Evenement_Sinapps__c</td>
+<td>Event</td>
+<td>properties.id</td>
+<td>numéro de l’évènement de création de mission</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tranco-des-civilités">Tranco des civilités</h3>
+<table>
+<thead>
+<tr class="header">
+<th><strong>Sinapps</strong></th>
+<th><strong>Noé</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Professeur</td>
+<td>M.</td>
+</tr>
+<tr class="even">
+<td>Maître</td>
+<td>M.</td>
+</tr>
+<tr class="odd">
+<td>Monsieur</td>
+<td>M.</td>
+</tr>
+<tr class="even">
+<td>Madame</td>
+<td>Mme</td>
+</tr>
+<tr class="odd">
+<td>Autres valeurs</td>
+<td>ne pas mettre à jour le champ</td>
+</tr>
+</tbody>
+</table>
+<h2 id="creation-dune-affaire">Creation d’une affaire</h2>
+<p>Chaque nouvelle prestation génère un nouveau <strong>Case</strong>
+(Affaire).</p>
+<p>Comme pour le compte l’idempotence est assurée par la présence d’un
+champ contenant le numéro d’évènement.</p>
+<p>On détermine si un compte correspond à un particulier ou à un
+professionnel en fonction de la valeur de la propriété
+properties.contrat.professionnel sur la ressource DossierSinistre</p>
+<table>
+<colgroup>
+<col style="width: 30%" />
+<col style="width: 30%" />
+<col style="width: 23%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Salesforce Fields</strong></th>
+<th><strong>Sinapps Ressource</strong></th>
+<th><strong>Sinapps path</strong></th>
+<th><strong>Comments</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Type</td>
+<td></td>
+<td></td>
+<td>‘Vitrage de menuiserie’</td>
+</tr>
+<tr class="even">
+<td>Status</td>
+<td></td>
+<td></td>
+<td>‘Nouvelle’</td>
+</tr>
+<tr class="odd">
+<td>Description</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.dommagesDeclares</td>
+<td>“Dommages déclarés :” sur une première ligne</td>
+</tr>
+<tr class="even">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.circonstancesDeclarees</td>
+<td>“Circonstances déclarées :” sur une seconde ligne</td>
+</tr>
+<tr class="odd">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.caracteristiques.detail.name</td>
+<td>“Détail du sinistre :” sur une 3eme ligne</td>
+</tr>
+<tr class="even">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.caracteristiques.cause.label</td>
+<td>“Cause du sinistre :” sur une 4eme ligne</td>
+</tr>
+<tr class="odd">
+<td>Client_final__c</td>
+<td></td>
+<td></td>
+<td>Le compte nouvellement créé</td>
+</tr>
+<tr class="even">
+<td>Reference_dossier__c</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.reference</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>TECH_RefSinistre__c</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.reference</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Nature_du_sinistre</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.caracteristiques.nature.label</td>
+<td>voir Tranco des natures de mission</td>
+</tr>
+<tr class="odd">
+<td>TechAffaireInterface__c</td>
+<td></td>
+<td></td>
+<td>true</td>
+</tr>
+<tr class="even">
+<td>Site_d_intervention__c</td>
+<td></td>
+<td></td>
+<td>Le site d’intervention créé par automatisme à la création du compte
+(lookup vers le compte)</td>
+</tr>
+<tr class="odd">
+<td>Franchise_a_collecter__c</td>
+<td>DossierSinistre</td>
+<td>properties.contrats[0].franchise.value.montant</td>
+<td>le premier qui est renseigné</td>
+</tr>
+<tr class="even">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.franchiseApplicable.value.montant</td>
+<td>^</td>
+</tr>
+<tr class="odd">
+<td>Franchise_collectee__c</td>
+<td></td>
+<td></td>
+<td>false</td>
+</tr>
+<tr class="even">
+<td>TVA_a_collecter__c</td>
+<td></td>
+<td></td>
+<td>vrai pour une entreprise faux sinon</td>
+</tr>
+<tr class="odd">
+<td>Type_de_Local__c</td>
+<td>DossierSinistre</td>
+<td>properties.risques[0].typeRisque.label</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Usage_Local__c</td>
+<td>DossierSinistre</td>
+<td>properties.risques[0].usageAssure.label</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Suivi_assure_activite_donneur_ordre__c</td>
+<td>SuiviInformation</td>
+<td>properties.statutSuiviInformation.name</td>
+<td>faux si suiviAssureStatus.equals = “Desactive”</td>
+</tr>
+<tr class="even">
+<td>Num_Contrat__c</td>
+<td>DossierSinistre</td>
+<td>properties.contrat.numero.label</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Qualite_Assure__c</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].relationAuRisque.label</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Date_du_sinistre__c</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.date</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>TypeDeMission__c</td>
+<td>Mission</td>
+<td>mission.typeMission.name</td>
+<td>voir Tranco des types de mission</td>
+</tr>
+<tr class="even">
+<td>AssureurId</td>
+<td>DossierSinistre</td>
+<td>properties.assureurId</td>
+<td>Pour un compte Perso remplir le lookup vers le compte avec le
+TECH_IDAssureur__c correspondant</td>
+</tr>
+<tr class="odd">
+<td>Numero_Evenement_Sinapps__c</td>
+<td>Event</td>
+<td>properties.id</td>
+<td>numéro de l’évènement de création de mission</td>
+</tr>
+<tr class="even">
+<td>Sinapps_Id_Prestation__c</td>
+<td>Prestation</td>
+<td>properties.id</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Sinapps_Id_Mission__c</td>
+<td>Mission</td>
+<td>properties.id</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>TechCoveaExecution__c</td>
+<td>Mission</td>
+<td>properties.id</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="tranco-des-types-de-mission">Tranco des types de mission</h3>
+<table>
+<thead>
+<tr class="header">
+<th><strong>Sinapps</strong></th>
+<th><strong>Noé</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>RenDirecte</td>
+<td>REN directe</td>
+</tr>
+<tr class="even">
+<td>RenSuiteExpertise</td>
+<td>REN suite expertise</td>
+</tr>
+<tr class="odd">
+<td>RenMobiliereDirecte</td>
+<td>REN mobilière directe</td>
+</tr>
+<tr class="even">
+<td>RenMobiliereSuiteExpertise</td>
+<td>REN mobilière suite à expertise</td>
+</tr>
+<tr class="odd">
+<td>RechercheFuite</td>
+<td>Recherche de fuite</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tranco-des-natures-de-mission">Tranco des natures de
+mission</h3>
+<table>
+<thead>
+<tr class="header">
+<th><strong>Sinapps</strong></th>
+<th><strong>Noé</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Bris de glace</td>
+<td>BDG</td>
+</tr>
+<tr class="even">
+<td>Vol</td>
+<td>VOL</td>
+</tr>
+<tr class="odd">
+<td>Catastrophe naturelle</td>
+<td>CATNAT</td>
+</tr>
+<tr class="even">
+<td>Incendie</td>
+<td>INCENDIE</td>
+</tr>
+<tr class="odd">
+<td>Dégât des eaux</td>
+<td>DDE</td>
+</tr>
+<tr class="even">
+<td>Autres valeurs</td>
+<td>Autre</td>
+</tr>
+</tbody>
+</table>
+<h2 id="creation-du-premier-commentaire">Creation du premier
+commentaire</h2>
+<p>Chaque nouvelle prestation entraine la création d’un enregistrement
+MessageClient__c (commentaire) contenant les commentaires de la mission.
+Comme pour le compte l’idempotence est assurée par la présence d’un
+champ contenant le numéro d’évènement. Il ne faut pas créer 2
+commentaire de type <strong>Commentaires initiaux</strong> avec le même
+numéro d’évènement.</p>
+<table>
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 28%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Salesforce Fields</strong></th>
+<th><strong>Sinapps Ressource</strong></th>
+<th><strong>Sinapps path</strong></th>
+<th><strong>Comments</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Contenu__c</td>
+<td>Mission</td>
+<td>properties.mission.commentaires.messages</td>
+<td>fusionnés et séparés par des —————–</td>
+</tr>
+<tr class="even">
+<td>Auteur__c</td>
+<td></td>
+<td></td>
+<td>‘API’</td>
+</tr>
+<tr class="odd">
+<td>Type__c</td>
+<td></td>
+<td></td>
+<td>‘Commentaires initiaux de mission’</td>
+</tr>
+<tr class="even">
+<td>Affaire__c</td>
+<td></td>
+<td></td>
+<td>Id du Case</td>
+</tr>
+<tr class="odd">
+<td>Numero_Evenement_Sinapps__c</td>
+<td>Event</td>
+<td>properties.id</td>
+<td>numéro de l’évènement de création de mission</td>
+</tr>
+</tbody>
+</table>
+<h2 id="creation-du-second-commentaire">Creation du second
+commentaire</h2>
+<p>Chaque nouvelle prestation entraine la création d’un enregistrement
+MessageClient__c (commentaire) contenant les informations initiales de
+la mission. Comme pour le compte l’idempotence est assurée par la
+présence d’un champ contenant le numéro d’évènement. Il ne faut pas
+créer 2 commentaire de type <strong>Informations initiales de la
+mission</strong> avec le même numéro d’évènement.</p>
+<table>
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 28%" />
+<col style="width: 21%" />
+<col style="width: 21%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Salesforce Fields</strong></th>
+<th><strong>Sinapps Ressource</strong></th>
+<th><strong>Sinapps path</strong></th>
+<th><strong>Comments</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Contenu__c</td>
+<td></td>
+<td></td>
+<td>voir tableau ci-dessous</td>
+</tr>
+<tr class="even">
+<td>Auteur__c</td>
+<td></td>
+<td></td>
+<td>‘API’</td>
+</tr>
+<tr class="odd">
+<td>Type__c</td>
+<td></td>
+<td></td>
+<td>‘Informations initiales de la mission’</td>
+</tr>
+<tr class="even">
+<td>Affaire__c</td>
+<td></td>
+<td></td>
+<td>Id du Case</td>
+</tr>
+<tr class="odd">
+<td>Numero_Evenement_Sinapps__c</td>
+<td>Event</td>
+<td>properties.id</td>
+<td>numéro de l’évènement de création de mission</td>
+</tr>
+</tbody>
+</table>
+<h3 id="contenu-du-commentaire">Contenu du commentaire</h3>
+<table>
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 45%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th><strong>Préfixe</strong></th>
+<th><strong>Sinapps Ressource</strong></th>
+<th><strong>Sinapps path</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Cause du sinistre</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.caracteristiques.cause.label</td>
+</tr>
+<tr class="even">
+<td>Détail du sinistre</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.caracteristiques.detail.name</td>
+</tr>
+<tr class="odd">
+<td>Dommages déclarés</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.dommagesDeclares</td>
+</tr>
+<tr class="even">
+<td>Circonstances</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.circonstancesDeclarees</td>
+</tr>
+<tr class="odd">
+<td>Nature du sinistre</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.caracteristiques.nature.label</td>
+</tr>
+<tr class="even">
+<td>Date du sinistre</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.date</td>
+</tr>
+<tr class="odd">
+<td>Adresse du sinistre</td>
+<td>Mission</td>
+<td>properties.sinistre.adresse.adresse1</td>
+</tr>
+<tr class="even">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.adresse.adresse2</td>
+</tr>
+<tr class="odd">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.adresse.adresse3</td>
+</tr>
+<tr class="even">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.adresse.adresse4</td>
+</tr>
+<tr class="odd">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.adresse.codePostal</td>
+</tr>
+<tr class="even">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.adresse.localite</td>
+</tr>
+<tr class="odd">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.adresse.codePays</td>
+</tr>
+<tr class="even">
+<td>Référence sinistre</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.reference</td>
+</tr>
+<tr class="odd">
+<td>Type de mission</td>
+<td>Mission</td>
+<td>mission.typeMission.name</td>
+</tr>
+<tr class="even">
+<td>Référence mission</td>
+<td>Mission</td>
+<td>properties.mission.numero</td>
+</tr>
+<tr class="odd">
+<td>Assureur émetteur</td>
+<td>Mission</td>
+<td>properties.missioncontactAssureur.value.personne.nom</td>
+</tr>
+<tr class="even">
+<td>Entreprise mandatée</td>
+<td>Prestation</td>
+<td>properties.prestataireId</td>
+</tr>
+<tr class="odd">
+<td>Date de missionnement</td>
+<td>Mission</td>
+<td>properties.mission.dateDeMissionnement</td>
+</tr>
+<tr class="even">
+<td>Type de risque</td>
+<td>DossierSinistre</td>
+<td>properties.risques[0].typeRisque.label</td>
+</tr>
+<tr class="odd">
+<td>Usage du risque</td>
+<td>DossierSinistre</td>
+<td>properties.risques[0].usageAssure.label</td>
+</tr>
+<tr class="even">
+<td>Qualité de l’assuré</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].relationAuRisque.label</td>
+</tr>
+<tr class="odd">
+<td>Mesure 1</td>
+<td>DossierSinistre</td>
+<td>properties.risques[0].mesures[0].typeMesure.label</td>
+</tr>
+<tr class="even">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.risques[0].mesures[0].valeur</td>
+</tr>
+<tr class="odd">
+<td>Mesure 2</td>
+<td>DossierSinistre</td>
+<td>properties.risques[0].mesures[1].typeMesure.label</td>
+</tr>
+<tr class="even">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.risques[0].mesures[1].valeur</td>
+</tr>
+<tr class="odd">
+<td>Mesure 3</td>
+<td>DossierSinistre</td>
+<td>properties.risques[0].mesures[2].typeMesure.label</td>
+</tr>
+<tr class="even">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.risques[0].mesures[1].valeur</td>
+</tr>
+<tr class="odd">
+<td>Nom de l’assuré</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.nom</td>
+</tr>
+<tr class="even">
+<td>Adresse de l’assuré</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.adresse.adresse1</td>
+</tr>
+<tr class="odd">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.adresse.adresse2</td>
+</tr>
+<tr class="even">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.adresse.adresse3</td>
+</tr>
+<tr class="odd">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.adresse.adresse4</td>
+</tr>
+<tr class="even">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.adresse.codePostal</td>
+</tr>
+<tr class="odd">
+<td>^</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.adresse.localite</td>
+</tr>
+<tr class="even">
+<td>Téléphone personnel</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.coordonnees.telPersonnel</td>
+</tr>
+<tr class="odd">
+<td>Téléphone portable</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.coordonnees.telPortable</td>
+</tr>
+<tr class="even">
+<td>Téléphone professionnel</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.coordonnees.telProfessionnel</td>
+</tr>
+<tr class="odd">
+<td>Email de l’assuré</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.coordonnees.email</td>
+</tr>
+<tr class="even">
+<td>Profession de l’assuré</td>
+<td>DossierSinistre</td>
+<td>properties.acteurs[0].personne.informationAssure.profession</td>
+</tr>
+<tr class="odd">
+<td>Numéro de contrat</td>
+<td>DossierSinistre</td>
+<td>properties.contrat.numero.label</td>
+</tr>
+<tr class="even">
+<td>Type de contrat</td>
+<td>DossierSinistre</td>
+<td>properties.contrat.typeContrat</td>
+</tr>
+<tr class="odd">
+<td>Activités professionnelles 1</td>
+<td>DossierSinistre</td>
+<td>properties.informationAssure.contrat.activiteSouscrite[0]</td>
+</tr>
+<tr class="even">
+<td>Activités professionnelles 2</td>
+<td>DossierSinistre</td>
+<td>properties.informationsAssure.contrat.activitesSouscrites[1]</td>
+</tr>
+<tr class="odd">
+<td>Activités professionnelles 3</td>
+<td>DossierSinistre</td>
+<td>properties.informationsAssure.contrat.activitesSouscrites[2]</td>
+</tr>
+<tr class="even">
+<td>Franchise</td>
+<td>DossierSinistre</td>
+<td>properties.franchiseApplicable.value.montant</td>
+</tr>
+<tr class="odd">
+<td>Code Gestionnaire</td>
+<td>Mission</td>
+<td>properties.mission.contactAssureur.value.code</td>
+</tr>
+<tr class="even">
+<td>Nom Gestionnaire</td>
+<td>Mission</td>
+<td>properties.mission.contactAssureur.value.personne.nom</td>
+</tr>
+<tr class="odd">
+<td>Adresse Gestionnaire</td>
+<td>Mission</td>
+<td>properties.mission.contactAssureur.value.personne.adresse.adresse1</td>
+</tr>
+<tr class="even">
+<td>^</td>
+<td>Mission</td>
+<td>properties.mission.contactAssureur.value.personne.adresse.adresse2</td>
+</tr>
+<tr class="odd">
+<td>^</td>
+<td>Mission</td>
+<td>properties.mission.contactAssureur.value.personne.adresse.adresse3</td>
+</tr>
+<tr class="even">
+<td>^</td>
+<td>Mission</td>
+<td>properties.mission.contactAssureur.value.personne.adresse.codePostal</td>
+</tr>
+<tr class="odd">
+<td>^</td>
+<td>Mission</td>
+<td>properties.mission.contactAssureur.value.personne.adresse.localite</td>
+</tr>
+<tr class="even">
+<td>Téléphone personnel Gestionnaire</td>
+<td>Mission</td>
+<td>properties.mission.contactAssureur.value.personne.coordonnees.telPersonnel</td>
+</tr>
+<tr class="odd">
+<td>DossierGestionnaireCoordTelPortable</td>
+<td>Mission</td>
+<td>properties.mission.contactAssureur.value.personne.coordonnees.telPortable</td>
+</tr>
+<tr class="even">
+<td>Téléphone Professionnel Gestionnaire</td>
+<td>Mission</td>
+<td>properties.mission.contactAssureur.value.personne.coordonnees.telProfessionnel</td>
+</tr>
+<tr class="odd">
+<td>Email Gestionnaire</td>
+<td>Mission</td>
+<td>properties.mission.contactAssureur.value.personne.coordonnees.email</td>
+</tr>
+<tr class="even">
+<td>Fax Gestionnaire</td>
+<td>Mission</td>
+<td>properties.mission.contactAssureur.value.personne.coordonnees.fax</td>
+</tr>
+<tr class="odd">
+<td>Convention IRSI applicable</td>
+<td>DossierSinistre</td>
+<td>properties.sinistre.ConventionIRSIAApplicable</td>
+</tr>
+<tr class="even">
+<td>Nbre de pièces</td>
+<td>DossierSinistre</td>
+<td>properties.risques[0].mesures[?(@.typeMesure.name==‘NombreDePieces’)].valeur</td>
+</tr>
+<tr class="odd">
+<td>Superficie</td>
+<td>DossierSinistre</td>
+<td>.risques[0].mesures[?(@.typeMesure.name==‘Superficie’)].valeur</td>
+</tr>
+<tr class="even">
+<td>Clauses particulières</td>
+<td>DossierSinistre</td>
+<td>properties.contrat.clausesParticulieres</td>
+</tr>
+<tr class="odd">
+<td>Informations spécifiques</td>
+<td>DossierSinistre</td>
+<td>properties.contrat.informationsSpecifiques</td>
+</tr>
+<tr class="even">
+<td>Apporteur d’affaires</td>
+<td>DossierSinistre</td>
+<td>properties.contrats[0].apporteur.nom</td>
+</tr>
+<tr class="odd">
+<td>Contrat professionnel</td>
+<td>DossierSinistre</td>
+<td>properties.contrat.professionnel</td>
+</tr>
+<tr class="even">
+<td>Numéro de contrat d’assistance</td>
+<td>DossierSinistre</td>
+<td>properties.contrat.numero.label</td>
+</tr>
+</tbody>
+</table>
+<h1 id="ajout-dun-commentaire">Ajout d’un commentaire</h1>
+<p><strong>Evènement</strong> : CommentaireAjoute,CommentaireCree</p>
+<p><strong>Objets Salesforce Créés</strong> : MessageClient__c</p>
+<p><strong>Ressources Sinapps</strong> : Prestation</p>
+<p><strong>Date de mise à jour</strong> : 19/04/2022</p>
+<h2 id="création-dun-commentaire">Création d’un commentaire</h2>
+<p>Il faut créer un nouvel enregistrement **MessageClient__c**
+(Commentaire). Ce commentaire est associée à l’Affaire qui possède un
+identifiant de prestation correspondant à celui de la ressource
+<strong>properties.id</strong>.</p>
+<table>
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 31%" />
+<col style="width: 22%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Salesforce Fields</th>
+<th>Sinapps Ressource</th>
+<th>Sinapps path</th>
+<th>Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Contenu__c</td>
+<td>Prestation</td>
+<td>properties.nouveauxCommentaires.message</td>
+<td>Concatenation des différents messages</td>
+</tr>
+<tr class="even">
+<td>DateCommentaireMission__c</td>
+<td>Prestation</td>
+<td>properties.nouveauxCommentaires.date</td>
+<td></td>
+</tr>
+<tr class="odd">
+<td>Type__c</td>
+<td></td>
+<td></td>
+<td>‘Commentaire ajouté’</td>
+</tr>
+<tr class="even">
+<td>Affaire__c</td>
+<td></td>
+<td></td>
+<td>Identifiant de l’affaire concernée</td>
+</tr>
+</tbody>
+</table>
+<h1 id="annulation-dune-prestation">Annulation d’une prestation</h1>
+<p><strong>Evènement</strong> : PrestationAnnulée</p>
+<p><strong>Objets Salesforce Créés</strong> : Case, MessageClient__c</p>
+<p><strong>Ressources Sinapps</strong> : Prestation</p>
+<p><strong>Date de mise à jour</strong> : 19/04/2022</p>
+<h2 id="changement-du-statut-de-laffaire">Changement du statut de
+l’affaire</h2>
+<p>L’enregistrement <strong>Case</strong> (Affaire) à mettre à jour
+possède l’identifiant de prestation correspondant à la propriété
+<strong>properties.id</strong> dans la ressource <strong>Event</strong>
+de Sinapps.</p>
+<table>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Salesforce Fields</th>
+<th>Sinapps Ressource</th>
+<th>Sinapps path</th>
+<th>Comments</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>AnnulationExtranet__c</td>
+<td></td>
+<td></td>
+<td>true</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Anomalie_detectee__c</td>
+<td></td>
+<td></td>
+<td>true</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="création-dun-commentaire-1">Création d’un commentaire</h2>
+<p>Il faut créer un nouvel enregistrement **MessageClient__c**
+(Commentaire d’annulation) associé à l’affaire annulée.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Salesforce Fields</th>
+<th>Sinapps Ressource</th>
+<th>Sinapps path</th>
+<th>Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Contenu__c</td>
+<td>Prestation</td>
+<td>properties.finPrestation.motif.label</td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Type__c</td>
+<td></td>
+<td></td>
+<td>‘Mission Annulée’</td>
+</tr>
+<tr class="odd">
+<td>Affaire__c</td>
+<td></td>
+<td></td>
+<td>Identifiant de l’affaire annulée</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Evènement</strong> : InsatisfactionDetectee</p>
+<p><strong>Objets Salesforce Créés</strong> : Case, MessageClient__c</p>
+<p><strong>Ressources Sinapps</strong> : Prestation</p>
+<p><strong>Date de mise à jour</strong> : 19/04/2022</p>
+<h2 id="mise-à-jour-de-laffaire">Mise à jour de l’affaire</h2>
+<p>L’enregistrement <strong>Case</strong> (Affaire) à mettre à jour
+possède l’identifiant de prestation correspondant à la propriété
+<strong>properties.id</strong> dans la ressource <strong>Event</strong>
+de Sinapps.</p>
+<table>
+<colgroup>
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 23%" />
+<col style="width: 17%" />
+<col style="width: 11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Salesforce Fields</th>
+<th>Sinapps Ressource</th>
+<th>Sinapps path</th>
+<th>Comments</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>InsatisfactionExtranet__c</td>
+<td></td>
+<td></td>
+<td>true</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="création-dun-commentaire-2">Création d’un commentaire</h2>
+<p>Il faut créer un nouvel enregistrement **MessageClient__c**
+(Commentaire). Ce commentaire est associée à l’Affaire qui possède un
+identifiant de prestation correspondant à celui de la ressource
+<strong>properties.id</strong>.</p>
+<table>
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 31%" />
+<col style="width: 22%" />
+<col style="width: 14%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Salesforce Fields</th>
+<th>Sinapps Ressource</th>
+<th>Sinapps path</th>
+<th>Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Contenu__c</td>
+<td>Prestation</td>
+<td>properties.notation.notesRecueillies.commentaire</td>
+<td>Concatenation des différents messages</td>
+</tr>
+<tr class="even">
+<td>Type__c</td>
+<td></td>
+<td></td>
+<td>‘Insatisfaction détectée sur l’extranet’</td>
+</tr>
+<tr class="odd">
+<td>Affaire__c</td>
+<td></td>
+<td></td>
+<td>Identifiant de l’affaire concernée</td>
+</tr>
+</tbody>
+</table>
+<h1 id="envoi-document">Envoi DOCUMENT</h1>
+<p><strong>Déclencheur</strong> :</p>
+<p>Si un enregistrement de type DocumentLink est créé et vérifie les
+conditions suivantes alors il faut réaliser un appel vers SINAPPS : - Le
+champ Type_de_document__c de l’enregistrement ContentDocument associé
+vaut ‘Cerfa TVA réduite’, ‘Mandat’ ou ‘PV de réception’ -
+L’enregistrement WhatId est associé une affaire (Case).</p>
+<p>Si un enregistrement de type DocumentLink est modifié et vérifie une
+ou les deux conditions suivantes alors il faut réaliser un appel vers
+SINAPPS : - Le champ Type_de_document__c de l’enregistrement
+ContentDocument associé a été modifié pour devenir ‘Cerfa TVA réduite’,
+‘Mandat’ ou ‘PV de réception’ - La valeur du WhatId a changé et il est
+associé à une affaire (Case).</p>
+<p>Le déclencheur est donc sur la création d’un ContentDocumentLink.
+Mais les informations à récupérer sont positionnées dans le
+ContentVersion actif associé au ContentDocument qui a été lié.</p>
+<p><strong>Objets Salesforce Source</strong> : ContentVersion et
+Case</p>
+<p><strong>Champs Salesforce Source</strong> :</p>
+<ul>
+<li>ContentVersion &gt; Type_de_document__c</li>
+<li>ContentVersion &gt; VersionData</li>
+<li>ContentVersion &gt; Title</li>
+<li>ContentVersion &gt; FileType</li>
+<li>ContentVersion &gt; FileExtension</li>
+<li>Case &gt; Sinapps_Mission_Id__c</li>
+</ul>
+<p><strong>Ressources Sinapps à mettre àjour</strong> : Mission</p>
+<h2 id="endpoint-pour-récupérer-lurl-de-lappel-sinapps">Endpoint pour
+récupérer l’URL de l’appel SINAPPS</h2>
+<p>Il s’agit de récupérer la commande ‘ajouterPiecesJointes’ sur la
+mission avec la mécanique de découvrabilité de l’API.</p>
+<p>Ce qui devrait revoyer une URL proche de :
+<baseUrl>+/core/api/covea/missions/<missionId>/commands/ajouterPiecesJointes</p>
+<h2 id="calcul-du-nom-et-du-type-de-fichier">Calcul du nom et du type de
+fichier</h2>
+<p>${filename} = Type_de_document_<em>c + “</em>” + Title + “.” +
+FileExtension;</p>
+<p>${MimeType} = Voir tableau ci-dessous</p>
+<table>
+<colgroup>
+<col style="width: 52%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>FileExtension</th>
+<th>MimeType</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>txt</td>
+<td>text/plain</td>
+</tr>
+<tr class="even">
+<td>pdf</td>
+<td>application/pdf</td>
+</tr>
+<tr class="odd">
+<td>doc</td>
+<td>application/msword</td>
+</tr>
+<tr class="even">
+<td>docx</td>
+<td>application/vnd.openxmlformats-officedocument.wordprocessingml.document</td>
+</tr>
+<tr class="odd">
+<td>xls</td>
+<td>application/vnd.ms-excel</td>
+</tr>
+<tr class="even">
+<td>xlsx</td>
+<td>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</td>
+</tr>
+<tr class="odd">
+<td>odt</td>
+<td>application/vnd.oasis.opendocument.text</td>
+</tr>
+<tr class="even">
+<td>ods</td>
+<td>application/vnd.oasis.opendocument.spreadsheet</td>
+</tr>
+<tr class="odd">
+<td>-</td>
+<td>application/octet-stream</td>
+</tr>
+</tbody>
+</table>
+<h2 id="requête-sinapps">Requête SINAPPS</h2>
+<p>Faire un appel au format multipart/form-data : * VERB = PUT * URL =
+voir chapitre ci-dessus</p>
+<ul>
+<li><p>FORM PART 1 TYPE : Body Parameter</p></li>
+<li><p>FORM PART 1 NAME : ‘nomCleFichier’</p></li>
+<li><p>FORM PART 1 VALUE : ${filename}</p></li>
+<li><p>FORM PART 2 TYPE : File</p></li>
+<li><p>FORM PART 2 NAME : ‘meta’</p></li>
+<li><p>FORM PART 2 VALUE : ${filename}</p></li>
+<li><p>FORM PART 2 MIME TYPE : ${MimeType}</p></li>
+<li><p>FORM PART 2 BLOB : encoder en base 64 le
+ContentVersion.VersionData</p></li>
+</ul>
+<h2 id="réponse-sinapps">Réponse SINAPPS</h2>
+<p>Vérifier le code HTTP de la réponse s’il est différent de 200
+renvoyer une Exception fonctionnelle dans le l’objet WS_Logs</p>
+<p>Si une autre erreur est renvoyée lors du traitement, il faut créer un
+enregistrement dans l’objet Event_Log# Envoi PHOTO</p>
+<p><strong>Déclencheur</strong> : Le flux se déclenche si un champ de
+l’objet Case dont le nom contient ‘Photo’ change de valeur. Il existe
+plusieurs champs qui contiennent Photo dans leur nom. La récupération
+des champs doit donc être dynamique en fonction du nom de champ.</p>
+<p><strong>Objets Salesforce Source</strong> : Case</p>
+<p><strong>Champs Salesforce Source</strong> : - Case &gt;
+Sinapps_Id_Mission__c - Case &gt; Nom du champ Photo modifié :
+${FIELDNAME} - Case &gt; Nouvelle valeur du champ modifié :
+${URL_PHOTO}</p>
+<p><strong>Ressources Sinapps à mettre à jour</strong> : Mission</p>
+<h2 id="endpoint-pour-récupérer-lurl-de-lappel-sinapps-1">Endpoint pour
+récupérer l’URL de l’appel SINAPPS</h2>
+<p>Il s’agit de récupérer la commande ‘ajouterPiecesJointes’ sur la
+mission avec la mécanique de découvrabilité de l’API.</p>
+<p>Ce qui devrait revoyer une URL proche de :
+<baseUrl>+/core/api/covea/missions/<missionId>/commands/ajouterPiecesJointes</p>
+<h2 id="requête-sinapps-1">Requête SINAPPS</h2>
+<p>Faire un appel au format multipart/form-data : * VERB = PUT * URL =
+voir chapitre ci-dessus</p>
+<ul>
+<li>FORM PART 1 TYPE : Body Parameter</li>
+<li>FORM PART 1 NAME : ‘nomCleFichier’</li>
+<li>FORM PART 1 VALUE : ${FIELDNAME}</li>
+<li></li>
+<li>FORM PART 2 TYPE : File</li>
+<li>FORM PART 2 NAME : ‘meta’</li>
+<li>FORM PART 2 MIME TYPE : image/jpeg</li>
+<li>FORM PART 2 VALUE : ${FIELDNAME}</li>
+<li>FORM PART 2 BLOB : Récupérer le contenu de la photo à l’adresse
+${URL_PHOTO} et l’encoder en base 64</li>
+</ul>
+<h2 id="réponse-sinapps-1">Réponse SINAPPS</h2>
+<p>Vérifier le code HTTP de la réponse s’il est différent de 200
+renvoyer une Exception fonctionnelle dans le l’objet WS_Logs</p>
+<p>Si une autre erreur est renvoyée lors du traitement, il faut créer un
+enregistrement dans l’objet Event_Log # Mise à jour de l’email de
+l’assuré (activation du suivi assuré ou SIC)</p>
+<p><strong>Date de mise à jour</strong> : 01/09/2022</p>
+<p><strong>Déclencheur</strong> : Le changement d’email sur un compte
+personnel ou un contact doit modifier toutes les missions SINAPPS de cet
+individu.</p>
+<p><strong>Ressources Sinapps à mettre à jour</strong> : Dossier
+Sinistre</p>
+<p><strong>Objets Salesforce Source</strong> : PersonAccount, Contact et
+Case</p>
+<p><strong>Champs Salesforce Source</strong> : - PersonAccount &gt;
+personEmail - PersonAccount &gt; Sinapps_ActeurId (champ à créer) -
+Contact &gt; email - Contact &gt; Sinapps_ActeurId (champ à créer) -
+Case &gt; Sinapps_DossierId__c (champ à créer ?)</p>
+<h2 id="scénario-des-appels-sinapps">Scénario des appels SINAPPS</h2>
+<p>L’action de mise à jour de l’adresse email de l’assuré ne peut être
+réalisée sans préciser l’adresse et les téléphones de l’assuré (cas
+d’erreur fonctionnel SINAPPS). Cependant Salesforce n’a pas vocation à
+synchroniser ces données avec SINAPPS.</p>
+<p>On va donc réaliser 2 appels : - 1 appel pour récupérer l’adresse et
+les téléphone de l’assuré - 1 appel pour mettre à jour l’email en
+passant les données obligatoires adresse et téléphone en complément</p>
+<h2 id="premier-appel-sinapps">Premier appel Sinapps</h2>
+<p>Il s’agit d’un appel HTTP GET à l’adresse du dossier sinistre :</p>
+<p>Dans la réponse il faut récupérer les valeurs des propriétés
+suivantes : - ${adresse1} =
+properties.acteurs[0].personne.adresse.adresse1 - ${adresse2} =
+properties.acteurs[0].personne.adresse.adresse2 - ${adresse3} =
+properties.acteurs[0].personne.adresse.adresse3 - ${adresse4} =
+properties.acteurs[0].personne.adresse.adresse4 - ${codePostal} =
+properties.acteurs[0].personne.adresse.codePostal - ${localite} =
+properties.acteurs[0].personne.adresse.localite - ${codePays} =
+properties.acteurs[0].personne.adresse.codePays - ${nomPays} =
+properties.acteurs[0].personne.adresse.nomPays - ${telPersonnel} =
+properties.acteurs[0].personne.coordonnees.telPersonnel - ${telPortable}
+= properties.acteurs[0].personne.coordonnees.telPortable -
+${telProfessionnel} =
+properties.acteurs[0].personne.coordonnees.telProfessionnel</p>
+<h2 id="endpoint-pour-récupérer-lurl-du-second-lappel-sinapps">Endpoint
+pour récupérer l’URL du second l’appel Sinapps</h2>
+<p>Il s’agit de récupérer la commande ‘modifierActeur’ sur le Dossier
+Sinistre avec la mécanique de découvrabilité de l’API.</p>
+<p>Ce qui devrait revoyer une URL proche de : <span
+class="math inline"><em>b</em><em>a</em><em>s</em><em>e</em><em>U</em><em>r</em><em>l</em> + /<em>c</em><em>o</em><em>r</em><em>e</em>/<em>a</em><em>p</em><em>i</em>/<em>c</em><em>o</em><em>v</em><em>e</em><em>a</em>/<em>d</em><em>o</em><em>s</em><em>s</em><em>i</em><em>e</em><em>r</em><em>S</em><em>i</em><em>n</em><em>i</em><em>s</em><em>t</em><em>r</em><em>e</em>/</span>{Sinapps_DossierId__c}/commands/modifierActeur</p>
+<h2 id="json-du-second-appel-sinapps">Json du second appel Sinapps</h2>
+<pre><code>{
+  &quot;id&quot;: &quot;${Sinapps_ActeurId}&quot;,
+  &quot;personne&quot;: {
+     &quot;adresse&quot;: {
+      &quot;adresse1&quot;: &quot;${adresse1}&quot;,
+      &quot;adresse2&quot;: &quot;${adresse2}&quot;,
+      &quot;adresse3&quot;: &quot;${adresse3}&quot;,
+      &quot;adresse4&quot;: &quot;${adresse4}&quot;,
+      &quot;codePostal&quot;: &quot;${codePostal}&quot;,
+      &quot;localite&quot;: &quot;${localite}&quot;,
+      &quot;codePays&quot;: &quot;${codePays}&quot;,
+      &quot;nomPays&quot;: &quot;${nomPays}&quot;
+    },
+    &quot;coordonnees&quot;: {
+      &quot;telPersonnel&quot;: &quot;${telPersonnel}&quot;,
+      &quot;telProfessionnel&quot;: &quot;${telProfessionnel}&quot;,
+      &quot;telPortable&quot;: &quot;${telPortable}&quot;,
+      &quot;email&quot;: &quot;${personEmail ou email}&quot;,
+    }
+  }
+}</code></pre>
+<h2 id="réponse-sinapps-2">Réponse SINAPPS</h2>
+<p>Vérifier le code HTTP de la réponse s’il est différent de 200
+renvoyer une Exception fonctionnelle</p>
+<h1 id="mise-à-jour-du-rendez-vous-de-métrage">Mise à jour du
+rendez-vous de métrage</h1>
+<p><strong>Date de mise à jour</strong> : 01/09/2022</p>
+<p><strong>Déclencheur</strong> : A la creation d’un Work Order de type
+METRAGE il faut envoyer une nouvelle date de rendez-vous à Sinapps.</p>
+<p><strong>Ressources Sinapps à mettre à jour</strong> : Prestation</p>
+<p><strong>Objets Salesforce Source</strong> : WorkOrder</p>
+<p><strong>Champs Salesforce Source</strong> : - WorkOrder &gt;
+StartDate - WorkOrder &gt; EndDate - WorkOrder &gt; CaseId &gt;
+Sinapps_Id_Prestation__c</p>
+<h2 id="endpoint-pour-récupérer-lurl-de-lappel-sinapps-2">Endpoint pour
+récupérer l’URL de l’appel SINAPPS</h2>
+<p>Il s’agit de récupérer la commande ‘prendreRendezVous’ sur la
+prestation avec la mécanique de découvrabilité de l’API.</p>
+<p>Ce qui devrait revoyer une URL proche de :
+${baseUrl}+/core/api/covea/prestation/<prestationId>/commands/prendreRendezVous</p>
+<h2 id="json-en-paramètre-de-la-requête">json en paramètre de la
+requête</h2>
+<pre><code>{
+  &quot;horaire&quot;: {
+    &quot;name&quot;: &quot;HoraireFixe&quot;,
+    &quot;label&quot;: &quot;HoraireFixe&quot;,
+    &quot;value&quot;: {
+      &quot;date&quot;: &quot;Date(${StartDate})&quot;,
+      &quot;heure&quot;: &quot;Heure(${StartDate})&quot;
+    }
+  },
+  &quot;dureeRendezVous&quot;: &quot;${EndDate}-${StartDate}&quot;,
+}</code></pre>
+<h2 id="réponse-sinapps-3">Réponse SINAPPS</h2>
+<p>Vérifier le code HTTP de la réponse s’il est différent de 200
+renvoyer une Exception fonctionnelle # Mise à jour du rendez-vous de
+pose</p>
+<p><strong>Date de mise à jour</strong> : 01/09/2022</p>
+<p><strong>Déclencheur</strong> : A la création d’un Work Order de type
+POSE alors on envoie une nouvelle date de rendez-vous à Sinapps.</p>
+<p><strong>Ressources Sinapps à mettre à jour</strong> : Prestation</p>
+<p><strong>Objets Salesforce Source</strong> : WorkOrder</p>
+<p><strong>Champs Salesforce Source</strong> : - WorkOrder &gt;
+Date_RDV__c - WorkOrder &gt; CaseId &gt; Sinapps_Id_Prestation__c</p>
+<h2 id="endpoint-pour-récupérer-lurl-de-lappel-sinapps-3">Endpoint pour
+récupérer l’URL de l’appel SINAPPS</h2>
+<p>Il s’agit de récupérer la commande ‘planifierIntervention’ sur la
+prestation avec la mécanique de découvrabilité de l’API.</p>
+<p>Ce qui devrait revoyer une URL proche de :
+<baseUrl>+/core/api/covea/prestation/<prestationId>/commands/planifierIntervention
+## json en paramètre de la requête</p>
+<pre><code>{
+  &quot;planification&quot;: {
+    &quot;name&quot;: &quot;PlanificationPlage&quot;,
+    &quot;label&quot;: &quot;PlanificationPlage&quot;,
+    &quot;value&quot;: {
+      &quot;horizon&quot;: &quot;${Date_RDV__c}&quot;
+    }
+  }
+}</code></pre>
+<h2 id="réponse-sinapps-4">Réponse SINAPPS</h2>
+<p>Vérifier le code HTTP de la réponse s’il est différent de 200
+renvoyer une Exception fonctionnelle</p>
