@@ -12,7 +12,7 @@
 - WorkOrder > EndDate
 - WorkOrder > CaseId > Sinapps_Id_Prestation__c
 
-## Endpoint pour récupérer l'URL de l'appel SINNAPPS 
+## Endpoint pour récupérer l'URL de l'appel SINAPPS 
 Il s'agit de récupérer la commande 'prendreRendezVous' sur la prestation avec la mécanique de découvrabilité de l'API.
 
 Ce qui devrait revoyer une URL proche de : ${baseUrl}+/core/api/covea/prestation/<prestationId>/commands/prendreRendezVous

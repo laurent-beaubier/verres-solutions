@@ -15,7 +15,7 @@
 - Contact > Sinapps_ActeurId (champ à créer)
 - Case > Sinapps_DossierId__c (champ à créer ?)
 
-## Scénario des appels SINNAPPS 
+## Scénario des appels SINAPPS 
 L'action de mise à jour de l'adresse email de l'assuré ne peut être réalisée sans préciser l'adresse et les téléphones de l'assuré (cas d'erreur fonctionnel SINAPPS).
 Cependant Salesforce n'a pas vocation à synchroniser ces données avec SINAPPS. 
 

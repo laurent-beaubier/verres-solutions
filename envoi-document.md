@@ -25,7 +25,7 @@ Le déclencheur est donc sur la création d'un ContentDocumentLink. Mais les inf
 
 **Ressources Sinapps à mettre àjour** : Mission
 
-## Endpoint pour récupérer l'URL de l'appel SINNAPPS 
+## Endpoint pour récupérer l'URL de l'appel SINAPPS 
 Il s'agit de récupérer la commande 'ajouterPiecesJointes' sur la mission avec la mécanique de découvrabilité de l'API.
 
 Ce qui devrait revoyer une URL proche de : <baseUrl>+/core/api/covea/missions/<missionId>/commands/ajouterPiecesJointes
