@@ -4,29 +4,26 @@
 
 **Objets Salesforce Créés** : Case, MessageClient__c, Account
 
-**Ressources Sinapps** : Prestation, Mission, DossierSinistre, SuiviInforation
+**Ressources Sinapps** : Prestation, Mission, DossierSinistre, SuiviInformation
 
-**Date de mise à jour** : 19/04/2022
+**Date de mise à jour** : 02/01/2023
 
 
 ## Creation d'un compte
 
-Chaque nouvelle prestation Sinappes génère un nouveau Account (Compte) avec le numéro d'évènement Sinapps correspondant à la création de la prestation associée.
+Chaque nouvelle prestation Sinappes génère un nouveau Account (Compte Professionnel) avec le numéro d'évènement Sinapps correspondant à la création de la prestation associée.
 
 Si un compte avec ce numéro d'évènement est déjà présente en base de données le compte ne doit pas être créé ni aucun autre objet. Ceci permet d'éviter des erreurs de rejeux intempestif (idempotence).
 
-On détermine si un compte correspond à un particulier ou à un professionnel en fonction de la valeur de la propriété properties.contrat.professionnel sur la ressource DossierSinistre
-
 Les addresses 1,2,3 et 4 sont séparées par des retours à la ligne et concaténées dans le même champ Salesforce
+
+La ressource DossierSinistre est accessible dans les liens (links["rel"="dossierSinistre"]) de la ressource prestation.
 
 |**Salesforce Fields** |**Sinapps Ressource** |**Sinapps path** |**Comments** |
 |-------------------|-------------------|--------------|--------------|
-| RecordType |  |  | valeur selon particulier / entreprise |
-| D_eduction_de_TVA__c |  |  | vrai/faux selon entreprise/particulier  |
-| Salutation | DossierSinistre | properties.acteurs[0].personne.civilite.label | pour un particulier uniquement (voir Tranco des civilités)|
-| LastName | DossierSinistre | properties.acteurs[0].personne.nom | pour un particulier uniquement |
-| FirstName | DossierSinistre | properties.acteurs[0].personne.prenom | pour un particulier uniquement |
-| Name | DossierSinistre | properties.acteurs[0].personne.nom | pour une entreprise uniquement |
+| RecordType |  |  | Entreprise |
+| D_eduction_de_TVA__c | DossierSinistre | properties.contrat.professionnel | vrai/faux selon la valeur du champ professionnel |
+| Name | DossierSinistre | properties.acteurs[0].personne.nom | |
 | Type |  |  | valeur en dur 'Prospect'|
 | BillingStreet | DossierSinistre | properties.acteurs[0].personne.adresse.adresse1  | |
 | ^ | DossierSinistre | properties.acteurs[0].personne.adresse.adresse2  | |
@@ -35,20 +32,17 @@ Les addresses 1,2,3 et 4 sont séparées par des retours à la ligne et concaté
 | BillingPostalCode | DossierSinistre | properties.acteurs[0].personne.adresse.codePostal | |
 | BillingCity | DossierSinistre | properties.acteurs[0].personne.adresse.localite | |
 | Fax | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPersonnel | |
-| PersonMobilePhone | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPortable | pour les particuliers uniquement |
 | Phone | DossierSinistre | properties.acteurs[0].personne.coordonnees.telProfessionnel | |
-| PersonEmail | DossierSinistre | properties.acteurs[0].personne.coordonnees.email | pour les particuliers uniquement  |
-| Industry |  | | "autre secteur d'activité" pour les entreprises uniquement  |
+| Industry |  | | "autre secteur d'activité" |
 | ShippingStreet | DossierSinistre | properties.sinistre.adresse.adresse1 ||
 | ^ | DossierSinistre | properties.sinistre.adresse.adresse2 ||
 | ^ | DossierSinistre | properties.sinistre.adresse.adresse3 ||
 | ^ | DossierSinistre | properties.sinistre.adresse.adresse4 ||
 | ShippingPostalCode | DossierSinistre | properties.sinistre.adresse.codePostal ||
 | ShippingCity | DossierSinistre | properties.sinistre.adresse.localite ||
-| PersonTitle | DossierSinistre | properties.acteurs[0].informationAssure.profession | pour les particuliers uniquement |
-| Email_Pro__c | DossierSinistre | properties.acteurs[0].personne.coordonnees.email | pour les professionnels uniquement |
-| Telephone_mobile_pro__c | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPortable | pour les professionnels uniquement |
-| Autre_telephone_pro__c | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPersonnel | pour les professionnels uniquement |
+| Email_Pro__c | DossierSinistre | properties.acteurs[0].personne.coordonnees.email | |
+| Telephone_mobile_pro__c | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPortable |  |
+| Autre_telephone_pro__c | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPersonnel |  |
 | Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de mission |
 
 ### Tranco des civilités
@@ -66,8 +60,6 @@ Les addresses 1,2,3 et 4 sont séparées par des retours à la ligne et concaté
 Chaque nouvelle prestation génère un nouveau **Case** (Affaire). 
 
 Comme pour le compte l'idempotence est assurée par la présence d'un champ contenant le numéro d'évènement.
-
-On détermine si un compte correspond à un particulier ou à un professionnel en fonction de la valeur de la propriété properties.contrat.professionnel sur la ressource DossierSinistre
 
 |**Salesforce Fields** |**Sinapps Ressource** |**Sinapps path** |**Comments**|
 |----------------------|----------------------|-----------------|------------|
