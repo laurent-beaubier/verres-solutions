@@ -2,7 +2,7 @@
 
 **Evènement** : PrestationCree
 
-**Objets Salesforce Créés** : Case, MessageClient__c, Account
+**Objets Salesforce Créés** : Case, MessageClient__c, Account, Contact
 
 **Ressources Sinapps** : Prestation, Mission, DossierSinistre, SuiviInformation
 
@@ -11,9 +11,9 @@
 
 ## Creation d'un compte
 
-Chaque nouvelle prestation Sinappes génère un nouveau Account (Compte Professionnel) avec le numéro d'évènement Sinapps correspondant à la création de la prestation associée.
+Chaque nouvelle prestation Sinapps génère un nouveau Account (Compte Professionnel) avec le numéro d'évènement Sinapps correspondant à la création de la prestation associée.
 
-Si un compte avec ce numéro d'évènement est déjà présente en base de données le compte ne doit pas être créé ni aucun autre objet. Ceci permet d'éviter des erreurs de rejeux intempestif (idempotence).
+Si un compte avec ce numéro d'évènement est déjà présent en base de données le compte ne doit pas être créé ni aucun autre objet (l'import s'arrête). Ceci permet d'éviter des erreurs de rejeux intempestif (idempotence).
 
 Les addresses 1,2,3 et 4 sont séparées par des retours à la ligne et concaténées dans le même champ Salesforce
 
@@ -45,9 +45,29 @@ La ressource DossierSinistre est accessible dans les liens (links["rel"="dossier
 | Autre_telephone_pro__c | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPersonnel |  |
 | Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de mission |
 
+## Creation d'un contact
+
+Chaque nouvelle prestation Sinapps génère un nouveau Contact associé au compte nouvellement créé (voir chapitre ci-dessus)
+
+Les addresses 1,2,3 et 4 sont séparées par des retours à la ligne et concaténées dans le même champ Salesforce
+
+La ressource DossierSinistre est accessible dans les liens (links["rel"="dossierSinistre"]) de la ressource prestation.
+
+|**Salesforce Fields** |**Sinapps Ressource** |**Sinapps path** |**Comments** |
+|-------------------|-------------------|--------------|--------------|
+| Salutation | DossierSinistre | properties.acteurs[0].personne.civilite.label | voir Tranco des civilités|
+| LastName | DossierSinistre | properties.acteurs[0].personne.nom | |
+| FirstName | DossierSinistre | properties.acteurs[0].personne.prenom | |
+| Title | DossierSinistre | properties.acteurs[0].informationAssure.profession | |
+| Phone | DossierSinistre | properties.acteurs[0].personne.coordonnees.telProfessionnel | Si Phone et MobilePone sont vides mettre le numéro fictif 0000000000 |
+| MobilePhone | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPortable | |
+| Fax | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPersonnel | |
+| Email | DossierSinistre | properties.acteurs[0].personne.coordonnees.email | |
+| Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de mission |
+
 ### Tranco des civilités
 
-|**Sinapps** |**Noé** |
+|**Sinapps** |**Salesforce** |
 |------------|--------|
 | Professeur | M. |
 | Maître | M. |
@@ -63,38 +83,40 @@ Comme pour le compte l'idempotence est assurée par la présence d'un champ cont
 
 |**Salesforce Fields** |**Sinapps Ressource** |**Sinapps path** |**Comments**|
 |----------------------|----------------------|-----------------|------------|
+| Client_final__c |  |  | Le compte nouvellement créé  |
 | Type |  |  | 'Vitrage de menuiserie' |
 | Status |  |  | 'Nouvelle' |
+| Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de mission |
+| Sinapps_Id_Prestation__c | Prestation | properties.id |  |
+| Sinapps_Id_Mission__c | Mission |  properties.id |  |
 | Description | DossierSinistre | properties.sinistre.dommagesDeclares | "Dommages déclarés : " sur une première ligne |
 | ^ | DossierSinistre | properties.sinistre.circonstancesDeclarees | "Circonstances déclarées : "  sur une seconde ligne |
 | ^ | DossierSinistre | properties.sinistre.caracteristiques.detail.name |  "Détail du sinistre : " sur une 3eme ligne  |
 | ^ | DossierSinistre | properties.sinistre.caracteristiques.cause.label  | "Cause du sinistre : " sur une 4eme ligne |
-| Client_final__c |  |  | Le compte nouvellement créé  |
 | Reference_dossier__c | DossierSinistre | properties.sinistre.reference | |
 | TECH_RefSinistre__c | DossierSinistre | properties.sinistre.reference | |
+| Num_Contrat__c | DossierSinistre | properties.contrat.numero.label  |  |
 | Nature_du_sinistre | DossierSinistre | properties.sinistre.caracteristiques.nature.label | voir Tranco des natures de mission |
 | TechAffaireInterface__c | |  | true |
-| Site_d_intervention__c |  |  | Le site d'intervention créé par automatisme à la création du compte (lookup vers le compte) | 
 | Franchise_a_collecter__c | DossierSinistre | properties.contrats[0].franchise.value.montant | le premier qui est renseigné |
 | ^ | DossierSinistre | properties.franchiseApplicable.value.montant | ^ |
 | Franchise_collectee__c |  | | false  |
 | TVA_a_collecter__c |  |  | vrai pour une entreprise faux sinon  |
 | Type_de_Local__c | DossierSinistre | properties.risques[0].typeRisque.label  |  |
 | Usage_Local__c | DossierSinistre | properties.risques[0].usageAssure.label  |  |
-| Suivi_assure_activite_donneur_ordre__c | SuiviInformation | properties.statutSuiviInformation.name | faux si suiviAssureStatus.equals = "Desactive"   |
-| Num_Contrat__c | DossierSinistre | properties.contrat.numero.label  |  |
 | Qualite_Assure__c | DossierSinistre | properties.acteurs[0].relationAuRisque.label  |  |
 | Date_du_sinistre__c | DossierSinistre | properties.sinistre.date  |  |
 | TypeDeMission__c | Mission | mission.typeMission.name | voir Tranco des types de mission |
-| AssureurId | DossierSinistre | properties.assureurId  | Pour un compte Perso remplir le lookup vers le compte avec le TECH_IDAssureur__c correspondant |
-| Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de mission |
-| Sinapps_Id_Prestation__c | Prestation | properties.id |  |
-| Sinapps_Id_Mission__c | Mission |  properties.id |  |
+| sinappsMissionNumber__c | Mission | mission.numero | |
 | TechCoveaExecution__c | Mission |  properties.id |  |
+| Suivi_assure_activite_donneur_ordre__c | SuiviInformation | properties.statutSuiviInformation.name | faux si suiviAssureStatus.equals = "Desactive"   |
+| AccountId | DossierSinistre | properties.assureurId  | Remplir le lookup vers le compte assureur correspondant à partir de son TECH_IDAssureur__c |
+| ContactId | |  Remplir le lookup vers le contact nouvellement créé |
+| Site_d_intervention__c |  |  | Le site d'intervention créé par automatisme à la création du compte (lookup vers le compte) | 
 
 ### Tranco des types de mission
 
-|**Sinapps** |**Noé** |
+|**Sinapps** |**Salesforce** |
 |---------|-----|
 | RenDirecte | REN directe |
 | RenSuiteExpertise | REN suite expertise |
@@ -104,7 +126,7 @@ Comme pour le compte l'idempotence est assurée par la présence d'un champ cont
 
 ### Tranco des natures de mission
 
-|**Sinapps** |**Noé** |
+|**Sinapps** |**Salesforce** |
 |---------|-----|
 | Bris de glace | BDG |
 | Vol | VOL |
