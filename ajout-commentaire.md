@@ -1,12 +1,13 @@
 #  Ajout d'un commentaire
 
-**Evènement** : CommentaireAjoute,CommentaireCree
+**Evènement** : CommentaireAjoute
+Attention! cet évènement contient plusieurs micro évènement (items.items). Il faut sélectionner le micro évènement qui vérifie "resourceType": "sollicitations" parmi tous les micro évènements pour récupérer les id de sollictations.
 
 **Objets Salesforce Créés** : MessageClient__c
 
 **Ressources Sinapps** : Prestation
 
-**Date de mise à jour** : 19/04/2022
+**Date de mise à jour** : 02/01/2023
 
 ## Création d'un commentaire
 
