@@ -21,7 +21,7 @@ La ressource DossierSinistre est accessible dans les liens (links["rel"="dossier
 
 |**Salesforce Fields** |**Sinapps Ressource** |**Sinapps path** |**Comments** |
 |-------------------|-------------------|--------------|--------------|
-| RecordType |  |  | Entreprise |
+| RecordType |  |  | Professionnel |
 | D_eduction_de_TVA__c | DossierSinistre | properties.contrat.professionnel | vrai/faux selon la valeur du champ professionnel |
 | Name | DossierSinistre | properties.acteurs[0].personne.nom | |
 | Type |  |  | valeur en dur 'Prospect'|
@@ -44,6 +44,8 @@ La ressource DossierSinistre est accessible dans les liens (links["rel"="dossier
 | Telephone_mobile_pro__c | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPortable |  |
 | Autre_telephone_pro__c | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPersonnel |  |
 | Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de mission |
+| AccountSource |  |  | valeur en dur 'Assurances' |
+
 
 ## Creation d'un contact
 
