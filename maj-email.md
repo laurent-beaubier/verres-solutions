@@ -6,22 +6,20 @@
 
 **Ressources Sinapps à mettre à jour** : Dossier Sinistre
 
-**Objets Salesforce Source** : PersonAccount, Contact et Case
+**Objets Salesforce Source** : Contact et Case
 
 **Champs Salesforce Source** : 
-- PersonAccount > personEmail
-- PersonAccount > Sinapps_ActeurId (champ à créer)
 - Contact > email
 - Contact > Sinapps_ActeurId (champ à créer)
 - Case > Sinapps_DossierId__c (champ à créer ?)
 
 ## Scénario des appels SINAPPS 
-L'action de mise à jour de l'adresse email de l'assuré ne peut être réalisée sans préciser l'adresse et les téléphones de l'assuré (cas d'erreur fonctionnel SINAPPS).
+L'action de mise à jour de l'adresse email de l'assuré ne peut être réalisée sans préciser les infos coordonnées, nom et adresse de l'assuré (cas d'erreur fonctionnel SINAPPS).
 Cependant Salesforce n'a pas vocation à synchroniser ces données avec SINAPPS. 
 
 On va donc réaliser 2 appels :
-- 1 appel pour récupérer l'adresse et les téléphone de l'assuré
-- 1 appel pour mettre à jour l'email en passant les données obligatoires adresse et téléphone en complément
+- 1 appel pour récupérer les infos actuelles de l'assuré dans Sinapps
+- 1 appel pour ajouter l'email (si un email n'existe pas encore pour cet assuré) en passant les données obligatoires coordonnées, nom et adresse en complément.
 
 ## Premier appel Sinapps
 Il s'agit d'un appel HTTP GET à l'adresse du dossier sinistre :
