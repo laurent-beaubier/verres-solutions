@@ -19,6 +19,8 @@ Les addresses 1,2,3 et 4 sont séparées par des retours à la ligne et concaté
 
 La ressource DossierSinistre est accessible dans les liens (links["rel"="dossierSinistre"]) de la ressource prestation.
 
+Pour déterminer si un assuré (acteur) dans Sinapps est un particulier ou une société, il faut se baser sur le dossier sinistre : properties.contrat.professionnel
+
 |**Salesforce Fields** |**Sinapps Ressource** |**Sinapps path** |**Comments** |
 |-------------------|-------------------|--------------|--------------|
 | RecordType |  |  | Professionnel |
@@ -33,7 +35,7 @@ La ressource DossierSinistre est accessible dans les liens (links["rel"="dossier
 | BillingCity | DossierSinistre | properties.acteurs[0].personne.adresse.localite | |
 | Fax | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPersonnel | |
 | Phone | DossierSinistre | properties.acteurs[0].personne.coordonnees.telProfessionnel | |
-| Industry |  | | "autre secteur d'activité" |
+| Industry | DossierSinistre | properties.contrat.professionnel | 'autre secteur d'activité' pour un profesionnel 'Particulier' sinon |
 | ShippingStreet | DossierSinistre | properties.sinistre.adresse.adresse1 ||
 | ^ | DossierSinistre | properties.sinistre.adresse.adresse2 ||
 | ^ | DossierSinistre | properties.sinistre.adresse.adresse3 ||
@@ -43,8 +45,10 @@ La ressource DossierSinistre est accessible dans les liens (links["rel"="dossier
 | Email_Pro__c | DossierSinistre | properties.acteurs[0].personne.coordonnees.email | |
 | Telephone_mobile_pro__c | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPortable |  |
 | Autre_telephone_pro__c | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPersonnel |  |
-| Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de mission |
+| Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de prestation |
 | AccountSource |  |  | valeur en dur 'Assurances' |
+| Num_Client_SAP__c | DossierSinistre | properties.contrat.professionnel | '115787' pour un profesionnel '115777' sinon |
+| Acompte_collecter__c |  |  | valeur en dur '50%' |
 
 
 ## Creation d'un contact
@@ -65,7 +69,9 @@ La ressource DossierSinistre est accessible dans les liens (links["rel"="dossier
 | MobilePhone | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPortable | |
 | Fax | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPersonnel | |
 | Email | DossierSinistre | properties.acteurs[0].personne.coordonnees.email | |
-| Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de mission |
+| Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de prestation |
+| Sinapps_DossierId__c | DossierSinistre |  properties.id | id du dossierSinistre |
+
 
 ### Tranco des civilités
 
@@ -88,7 +94,7 @@ Comme pour le compte l'idempotence est assurée par la présence d'un champ cont
 | Client_final__c |  |  | Le compte nouvellement créé  |
 | Type |  |  | 'Vitrage de menuiserie' |
 | Status |  |  | 'Nouvelle' |
-| Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de mission |
+| Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de prestation |
 | Sinapps_Id_Prestation__c | Prestation | properties.id |  |
 | Sinapps_Id_Mission__c | Mission |  properties.id |  |
 | Description | DossierSinistre | properties.sinistre.dommagesDeclares | "Dommages déclarés : " sur une première ligne |
@@ -149,13 +155,13 @@ Il ne faut pas créer 2 commentaire de type **Commentaires initiaux** avec le m�
 | Auteur__c |  |  | 'API' |
 | Type__c |  |  | 'Commentaires initiaux de mission' |
 | Affaire__c |  | |  Id du Case |
-| Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de mission |
+| Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de prestation |
 
 ## Creation du second commentaire
 
 Chaque nouvelle prestation entraine la création d'un enregistrement MessageClient__c (commentaire) contenant les informations initiales de la mission. 
 Comme pour le compte l'idempotence est assurée par la présence d'un champ contenant le numéro d'évènement.
-Il ne faut pas créer 2 commentaire de type **Informations initiales de la mission** avec le même numéro d'évènement.
+Il ne faut pas créer 2 commentaire de type **Informations initiales de la prestation** avec le même numéro d'évènement.
 
 |**Salesforce Fields** |**Sinapps Ressource** |**Sinapps path** | **Comments**|
 |-------------------|-------------------|--------------|--------------|
@@ -163,4 +169,4 @@ Il ne faut pas créer 2 commentaire de type **Informations initiales de la missi
 | Auteur__c |  | |  'API' |
 | Type__c |  | |  'Informations initiales de la mission' |
 | Affaire__c | |  |  Id du Case |
-| Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de mission |
+| Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de prestation |
