@@ -135,79 +135,8 @@ Il ne faut pas créer 2 commentaire de type **Informations initiales de la missi
 
 |**Salesforce Fields** |**Sinapps Ressource** |**Sinapps path** | **Comments**|
 |-------------------|-------------------|--------------|--------------|
-| Contenu__c |  | |  voir tableau ci-dessous |
+| Contenu__c |  | |  serialiser le contenu de la ressource dossierSinistre |
 | Auteur__c |  | |  'API' |
 | Type__c |  | |  'Informations initiales de la mission' |
 | Affaire__c | |  |  Id du Case |
 | Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de mission |
-
-### Contenu du commentaire
-
-|**Préfixe** |**Sinapps Ressource** |**Sinapps path**
-|---------|-------------------|--------------|
-| Cause du sinistre  | DossierSinistre | properties.sinistre.caracteristiques.cause.label |
-| Détail du sinistre | DossierSinistre | properties.sinistre.caracteristiques.detail.name |
-| Dommages déclarés | DossierSinistre | properties.sinistre.dommagesDeclares |
-| Circonstances | DossierSinistre | properties.sinistre.circonstancesDeclarees |
-| Nature du sinistre | DossierSinistre | properties.sinistre.caracteristiques.nature.label |
-| Date du sinistre  | DossierSinistre | properties.sinistre.date |
-| Adresse du sinistre | Mission | properties.sinistre.adresse.adresse1 |
-| ^ | DossierSinistre | properties.sinistre.adresse.adresse2 |
-| ^ | DossierSinistre | properties.sinistre.adresse.adresse3 |
-| ^ | DossierSinistre | properties.sinistre.adresse.adresse4 |
-| ^ | DossierSinistre | properties.sinistre.adresse.codePostal |
-| ^ | DossierSinistre | properties.sinistre.adresse.localite |
-| ^ | DossierSinistre | properties.sinistre.adresse.codePays |
-| Référence sinistre | DossierSinistre | properties.sinistre.reference
-| Type de mission  | Mission | mission.typeMission.name | 
-| Référence mission  | Mission | properties.mission.numero |
-| Assureur émetteur  | Mission | properties.missioncontactAssureur.value.personne.nom |
-| Entreprise mandatée | Prestation | properties.prestataireId |
-| Date de missionnement | Mission | properties.mission.dateDeMissionnement |
-| Type de risque | DossierSinistre | properties.risques[0].typeRisque.label |
-| Usage du risque | DossierSinistre | properties.risques[0].usageAssure.label |
-| Qualité de l'assuré | DossierSinistre | properties.acteurs[0].relationAuRisque.label |
-| Mesure 1  | DossierSinistre | properties.risques[0].mesures[0].typeMesure.label |
-| ^ | DossierSinistre | properties.risques[0].mesures[0].valeur |
-| Mesure 2 | DossierSinistre | properties.risques[0].mesures[1].typeMesure.label |
-| ^  | DossierSinistre | properties.risques[0].mesures[1].valeur |
-| Mesure 3 | DossierSinistre | properties.risques[0].mesures[2].typeMesure.label |
-| ^ | DossierSinistre | properties.risques[0].mesures[1].valeur |
-| Nom de l'assuré  | DossierSinistre | properties.acteurs[0].personne.nom |
-| Adresse de l'assuré  | DossierSinistre | properties.acteurs[0].personne.adresse.adresse1  |
-| ^ | DossierSinistre | properties.acteurs[0].personne.adresse.adresse2  |
-| ^ | DossierSinistre | properties.acteurs[0].personne.adresse.adresse3  |
-| ^ | DossierSinistre | properties.acteurs[0].personne.adresse.adresse4  |
-| ^ | DossierSinistre | properties.acteurs[0].personne.adresse.codePostal |
-| ^ | DossierSinistre | properties.acteurs[0].personne.adresse.localite |
-| Téléphone personnel | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPersonnel |
-| Téléphone portable | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPortable |
-| Téléphone professionnel| DossierSinistre | properties.acteurs[0].personne.coordonnees.telProfessionnel |
-| Email de l'assuré | DossierSinistre | properties.acteurs[0].personne.coordonnees.email |
-| Profession de l'assuré| DossierSinistre | properties.acteurs[0].personne.informationAssure.profession |
-| Numéro de contrat | DossierSinistre | properties.contrat.numero.label 
-| Type de contrat | DossierSinistre | properties.contrat.typeContrat |
-| Activités professionnelles 1 | DossierSinistre | properties.informationAssure.contrat.activiteSouscrite[0] |
-| Activités professionnelles 2 | DossierSinistre | properties.informationsAssure.contrat.activitesSouscrites[1] |
-| Activités professionnelles 3 | DossierSinistre | properties.informationsAssure.contrat.activitesSouscrites[2] |
-| Franchise | DossierSinistre | properties.franchiseApplicable.value.montant |
-| Code Gestionnaire | Mission | properties.mission.contactAssureur.value.code |
-| Nom Gestionnaire | Mission | properties.mission.contactAssureur.value.personne.nom |
-| Adresse Gestionnaire | Mission | properties.mission.contactAssureur.value.personne.adresse.adresse1  |
-| ^ | Mission | properties.mission.contactAssureur.value.personne.adresse.adresse2  |
-| ^ | Mission | properties.mission.contactAssureur.value.personne.adresse.adresse3  |
-| ^ | Mission | properties.mission.contactAssureur.value.personne.adresse.codePostal  |
-| ^ | Mission | properties.mission.contactAssureur.value.personne.adresse.localite  |
-| Téléphone personnel Gestionnaire | Mission | properties.mission.contactAssureur.value.personne.coordonnees.telPersonnel |
-| DossierGestionnaireCoordTelPortable | Mission | properties.mission.contactAssureur.value.personne.coordonnees.telPortable |
-| Téléphone Professionnel Gestionnaire | Mission | properties.mission.contactAssureur.value.personne.coordonnees.telProfessionnel |
-| Email Gestionnaire | Mission | properties.mission.contactAssureur.value.personne.coordonnees.email |
-| Fax Gestionnaire | Mission | properties.mission.contactAssureur.value.personne.coordonnees.fax |
-| Convention IRSI applicable | DossierSinistre | properties.sinistre.ConventionIRSIAApplicable |
-| Nbre de pièces | DossierSinistre | properties.risques[0].mesures[?(@.typeMesure.name=='NombreDePieces')].valeur |
-| Superficie | DossierSinistre | .risques[0].mesures[?(@.typeMesure.name=='Superficie')].valeur |
-| Clauses particulières | DossierSinistre | properties.contrat.clausesParticulieres |
-| Informations spécifiques | DossierSinistre | properties.contrat.informationsSpecifiques |
-| Apporteur d’affaires | DossierSinistre | properties.contrats[0].apporteur.nom |
-| Contrat professionnel | DossierSinistre | properties.contrat.professionnel |
-| Numéro de contrat d’assistance | DossierSinistre | properties.contrat.numero.label |
