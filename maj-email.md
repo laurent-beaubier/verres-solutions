@@ -1,8 +1,8 @@
 #  Mise à jour de l'email de l'assuré (activation du suivi assuré ou SIC)
 
-**Date de mise à jour** : 01/09/2022
+**Date de mise à jour** : 02/01/2023
 
-**Déclencheur** : Le changement d'email sur un compte personnel ou un contact doit modifier toutes les missions SINAPPS de cet individu.
+**Déclencheur** : Le changement d'email sur un contact doit modifier toutes les dossiers de sinistre dans SINAPPS associés à cet individu.
 
 **Ressources Sinapps à mettre à jour** : Dossier Sinistre
 
@@ -10,16 +10,15 @@
 
 **Champs Salesforce Source** : 
 - Contact > email
-- Contact > Sinapps_ActeurId (champ à créer)
-- Case > Sinapps_DossierId__c (champ à créer ?)
+- Case > Sinapps_DossierId__c
 
 ## Scénario des appels SINAPPS 
 L'action de mise à jour de l'adresse email de l'assuré ne peut être réalisée sans préciser les infos coordonnées, nom et adresse de l'assuré (cas d'erreur fonctionnel SINAPPS).
 Cependant Salesforce n'a pas vocation à synchroniser ces données avec SINAPPS. 
 
 On va donc réaliser 2 appels :
-- 1 appel pour récupérer les infos actuelles de l'assuré dans Sinapps
-- 1 appel pour ajouter l'email (si un email n'existe pas encore pour cet assuré) en passant les données obligatoires coordonnées, nom et adresse en complément.
+- 1 appel pour récupérer les infos actuelles de l'assuré dans Sinapps sur la ressource dossierSinistre à partir de Sinapps_DossierId__c
+- 1 appel pour ajouter l'email (si un email n'existe pas encore pour cet assuré) en passant les données obligatoires coordonnées, nom et adresse en complément sur la ressource dossierSinistre avec l'id Sinapps_DossierId__c.
 
 ## Premier appel Sinapps
 Il s'agit d'un appel HTTP GET à l'adresse du dossier sinistre :
@@ -39,7 +38,7 @@ Dans la réponse il faut récupérer les valeurs des propriétés suivantes :
 
 ## Endpoint pour récupérer l'URL du second l'appel Sinapps
 
-Il s'agit de récupérer la commande 'modifierActeur' sur le Dossier Sinistre avec la mécanique de découvrabilité de l'API.
+Il s'agit de récupérer la commande 'modifierActeur' sur la ressource dossierSinistre avec la mécanique de découvrabilité de l'API.
 
 Ce qui devrait revoyer une URL proche de : ${baseUrl}+/core/api/covea/dossierSinistre/${Sinapps_DossierId__c}/commands/modifierActeur
 
