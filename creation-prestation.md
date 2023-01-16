@@ -34,7 +34,7 @@ Pour déterminer si un assuré (acteur) dans Sinapps est un particulier ou une s
 | BillingPostalCode | DossierSinistre | properties.acteurs[0].personne.adresse.codePostal | |
 | BillingCity | DossierSinistre | properties.acteurs[0].personne.adresse.localite | |
 | Fax | DossierSinistre | properties.acteurs[0].personne.coordonnees.telPersonnel | |
-| Phone | DossierSinistre | properties.acteurs[0].personne.coordonnees.telProfessionnel | |
+| Phone | DossierSinistre | properties.acteurs[0].personne.coordonnees.telProfessionnel | mettre 0000000 si vide avec Autre_telephone_pro__c et MobilePhone vides aussi |
 | Industry | DossierSinistre | properties.contrat.professionnel | 'autre secteur d'activité' pour un profesionnel 'Particulier' sinon |
 | ShippingStreet | DossierSinistre | properties.sinistre.adresse.adresse1 ||
 | ^ | DossierSinistre | properties.sinistre.adresse.adresse2 ||
@@ -98,8 +98,10 @@ Comme pour le compte l'idempotence est assurée par la présence d'un champ cont
 | Sinapps_Id_Prestation__c | Prestation | properties.id |  |
 | Sinapps_Id_Mission__c | Mission |  properties.id |  |
 | Description | DossierSinistre | properties.sinistre.dommagesDeclares | "Dommages déclarés : " sur une première ligne |
+| ^ | DossierSinistre | properties.sinistre.dommagesConstates | "Dommages constatés : "  sur une seconde ligne |
 | ^ | DossierSinistre | properties.sinistre.circonstancesDeclarees | "Circonstances déclarées : "  sur une seconde ligne |
-| ^ | DossierSinistre | properties.sinistre.caracteristiques.detail.name |  "Détail du sinistre : " sur une 3eme ligne  |
+| ^ | DossierSinistre | properties.sinistre.circonstancesConstatees | "Circonstances constatées : "  sur une seconde ligne |
+| ^ | DossierSinistre | properties.sinistre.caracteristiques.detail.label |  "Détail du sinistre : " sur une 3eme ligne  |
 | ^ | DossierSinistre | properties.sinistre.caracteristiques.cause.label  | "Cause du sinistre : " sur une 4eme ligne |
 | Reference_dossier__c | DossierSinistre | properties.sinistre.reference | |
 | TECH_RefSinistre__c | DossierSinistre | properties.sinistre.reference | |
