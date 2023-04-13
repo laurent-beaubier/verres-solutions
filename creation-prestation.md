@@ -154,7 +154,6 @@ Il ne faut pas créer 2 commentaire de type **Commentaires initiaux** avec le m�
 |**Salesforce Fields** |**Sinapps Ressource** |**Sinapps path** | **Comments**|
 |-------------------|-------------------|--------------|--------------|
 | Contenu__c | Mission | properties.mission.commentaires.messages | fusionnés et séparés par des ----------------- |
-| Auteur__c |  |  | 'API' |
 | Type__c |  |  | 'Commentaires initiaux de mission' |
 | Affaire__c |  | |  Id du Case |
 | Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de prestation |
@@ -168,7 +167,6 @@ Il ne faut pas créer 2 commentaire de type **Informations initiales de la prest
 |**Salesforce Fields** |**Sinapps Ressource** |**Sinapps path** | **Comments**|
 |-------------------|-------------------|--------------|--------------|
 | Contenu__c |  | |  serialiser le contenu de la ressource dossierSinistre |
-| Auteur__c |  | |  'API' |
 | Type__c |  | |  'Informations initiales de la mission' |
 | Affaire__c | |  |  Id du Case |
 | Numero_Evenement_Sinapps__c | Event |  properties.id | numéro de l'évènement de création de prestation |

@@ -17,7 +17,6 @@ Ce commentaire est associée à l'Affaire qui possède un identifiant de prestat
 | Salesforce Fields | Sinapps Ressource | Sinapps path | Comments|
 |-------------------|-------------------|--------------|---------|
 | Contenu__c | Prestation | properties.nouveauxCommentaires.message | Concatenation des différents messages |
-| DateCommentaireMission__c | Prestation | properties.nouveauxCommentaires.date | |
 | Type__c |  | | 'Commentaire ajouté' |
 | Affaire__c | |  | Identifiant de l'affaire concernée |
 
